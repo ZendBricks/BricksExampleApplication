@@ -1,0 +1,27 @@
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "5.6.*",
+        "zendframework/zend-mvc": "*",
+        "zendframework/zend-cache": "*",
+        "zendframework/zend-form": "*",
+        "zendframework/zend-json": "*",
+        "zendframework/zend-log": "*",
+        "zendframework/zend-mvc-console": "*",
+        "zendframework/zend-mvc-i18n": "*",
+        "zendframework/zend-mvc-plugins": "*",
+        "zendframework/zend-psr7bridge": "*",
+        "zendframework/zend-session": "*",
+        "zendframework/zend-servicemanager-di": "*",
+        "zend-bricks/bricks-common": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\": "module/Application/src/"
+        }
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:8080 -t public/ public/index.php"
+    }
+}
