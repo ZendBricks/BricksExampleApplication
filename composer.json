@@ -13,6 +13,7 @@
         "zendframework/zend-mvc-plugins": "*",
         "zendframework/zend-psr7bridge": "*",
         "zendframework/zend-session": "*",
+        "zendframework/zend-servicemanager": "*",
         "zendframework/zend-servicemanager-di": "*",
         "zend-bricks/bricks-common": "*"
     },

@@ -16,6 +16,7 @@ return [
         'Zend\Router',
         'Zend\Validator',
         'Application',
+        'User'
     ],
     'module_listener_options' => [
         'module_paths' => [
