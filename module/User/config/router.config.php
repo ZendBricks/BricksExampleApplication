@@ -4,26 +4,37 @@ namespace User;
 
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
+use User\Controller\AuthController;
 
 return [
     'routes' => [
-        'home' => [
+        'login' => [
             'type' => Literal::class,
             'options' => [
-                'route' => '/',
+                'route' => '/login',
                 'defaults' => [
-                    'controller' => Controller\IndexController::class,
-                    'action' => 'index',
+                    'controller' => AuthController::class,
+                    'action' => 'login',
                 ],
             ],
         ],
-        'application' => [
-            'type' => Segment::class,
+        'logout' => [
+            'type' => Literal::class,
             'options' => [
-                'route' => '/application[/:action]',
+                'route' => '/logout',
                 'defaults' => [
-                    'controller' => Controller\IndexController::class,
-                    'action' => 'index',
+                    'controller' => AuthController::class,
+                    'action' => 'logout',
+                ],
+            ],
+        ],
+        'register' => [
+            'type' => Literal::class,
+            'options' => [
+                'route' => '/register',
+                'defaults' => [
+                    'controller' => AuthController::class,
+                    'action' => 'register',
                 ],
             ],
         ],

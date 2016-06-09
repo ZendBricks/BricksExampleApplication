@@ -5,6 +5,7 @@ namespace Application;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
+use Application\Factory\PdoFactory;
 
 return [
     'router' => [
@@ -52,4 +53,9 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            'pdo' => PdoFactory::class
+        ]
+    ]
 ];

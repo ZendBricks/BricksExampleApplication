@@ -2,7 +2,7 @@
 
 namespace User\Api;
 
-class Api implements ApiInterface
+class UserApi implements ApiInterface
 {
     protected $pdo;
     
