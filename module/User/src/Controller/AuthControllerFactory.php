@@ -1,6 +1,6 @@
 <?php
 
-namespace User\Factory;
+namespace User\Controller;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;

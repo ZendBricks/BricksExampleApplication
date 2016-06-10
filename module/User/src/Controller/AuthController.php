@@ -4,6 +4,7 @@ namespace User\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use User\Api\ApiInterface;
+use User\Form\LoginForm;
 
 /**
  * User Authentication
@@ -18,7 +19,10 @@ class AuthController extends AbstractActionController
 
     public function loginAction()
     {
-        
+        $form = new LoginForm();
+        return [
+            'form' => $form
+        ];
     }
     
     public function logoutAction()

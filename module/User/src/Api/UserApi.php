@@ -10,4 +10,9 @@ class UserApi implements ApiInterface
     {
         $this->pdo;
     }
+    
+    public function getPasswordByUsername($username)
+    {
+        
+    }
 }

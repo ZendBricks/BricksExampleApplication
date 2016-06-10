@@ -15,6 +15,7 @@
         "zendframework/zend-session": "*",
         "zendframework/zend-servicemanager": "*",
         "zendframework/zend-servicemanager-di": "*",
+        "zendframework/zend-crypt": "*",
         "zend-bricks/bricks-common": "*"
     },
     "autoload": {
