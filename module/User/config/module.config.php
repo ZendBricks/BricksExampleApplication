@@ -5,12 +5,7 @@ return [
     'controllers' => require 'controllers.config.php',
     'navigation' => require 'navigation.config.php',
     'router' => require 'router.config.php',
-    'service_manager' => [
-        'factories' => [
-            'UserApi' => \User\Api\UserApiFactory::class,
-            'Auth' => \User\Auth\AuthServiceFactory::class,
-            'Acl' => \User\Auth\AclFactory::class,
-        ]
-    ],
+    'service_manager' => require 'service_manager.config.php',
+    'translator' => require 'translator.config.php',
     'view_manager' => require 'view_manager.config.php',
 ];

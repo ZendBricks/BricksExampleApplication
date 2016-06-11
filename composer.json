@@ -19,6 +19,7 @@
         "zendframework/zend-navigation": "*",
         "zendframework/zend-crypt": "*",
         "zendframework/zend-permissions-acl": "*",
+        "zendframework/zend-i18n": "*",
         "zend-bricks/bricks-common": "*"
     },
     "autoload": {

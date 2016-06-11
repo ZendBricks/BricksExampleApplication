@@ -7,6 +7,7 @@ use Zend\Router\Http\Segment;
 use User\Controller\AuthController;
 
 return [
+    'router_class' => \Zend\Mvc\I18n\Router\TranslatorAwareTreeRouteStack::class,
     'routes' => [
         'auth' => [
             'type' => Literal::class,

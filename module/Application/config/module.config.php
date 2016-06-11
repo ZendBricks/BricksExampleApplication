@@ -6,8 +6,10 @@ use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Application\Factory\PdoFactory;
+use Zend\I18n\Translator\TranslatorServiceFactory;
 
 return [
+    'caches' => require 'caches.config.php',
     'router' => [
         'routes' => [
             'home' => [
@@ -55,7 +57,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'pdo' => PdoFactory::class
+            'pdo' => PdoFactory::class,
+            'translator' => TranslatorServiceFactory::class
         ]
     ]
 ];

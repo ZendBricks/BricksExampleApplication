@@ -15,6 +15,7 @@ return [
         'Zend\Cache',
         'Zend\Router',
 //        'Zend\Navigation',
+        'Zend\I18n',
         'Zend\Validator',
         'Application',
         'User'
