@@ -2,7 +2,7 @@
 
 namespace User\Api;
 
-class UserApi implements ApiInterface
+class UserApi implements UserApiInterface
 {
     protected $pdo;
     
@@ -11,8 +11,54 @@ class UserApi implements ApiInterface
         $this->pdo;
     }
     
+    public function setSessionIdentity($sessionId, $identity)
+    {
+        
+    }
+    
+    public function getSessionIdentity($sessionId)
+    {
+        
+    }
+    
+    public function clearSessionIdentity($sessionId)
+    {
+        
+    }
+
     public function getPasswordByUsername($username)
     {
         
+    }
+
+    public function getRoleNameByIdentity($userId)
+    {
+        
+    }
+    
+    public function getPermissions()
+    {
+        return [
+            'auth/login',
+            'auth/register',
+            'auth/logout'
+        ];
+    }
+    
+    public function getRoles()
+    {
+        return [
+            'Guest' => [],
+            'User' => ['Guest']
+        ];
+    }
+
+    public function getRolePermissions()
+    {
+        return [
+            'Guest' => 'auth/login',
+            'Guest' => 'auth/register',
+            'User' => 'auth/logout'
+        ];
     }
 }

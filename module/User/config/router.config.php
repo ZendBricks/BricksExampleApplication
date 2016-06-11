@@ -8,36 +8,44 @@ use User\Controller\AuthController;
 
 return [
     'routes' => [
-        'login' => [
+        'auth' => [
             'type' => Literal::class,
             'options' => [
-                'route' => '/login',
+                'route' => '/auth',
                 'defaults' => [
-                    'controller' => AuthController::class,
-                    'action' => 'login',
-                ],
+                    'controller' => AuthController::class
+                ]
             ],
-        ],
-        'logout' => [
-            'type' => Literal::class,
-            'options' => [
-                'route' => '/logout',
-                'defaults' => [
-                    'controller' => AuthController::class,
-                    'action' => 'logout',
+            'child_routes' => [
+                'login' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/login',
+                        'defaults' => [
+                            'action' => 'login',
+                        ],
+                    ],
                 ],
-            ],
-        ],
-        'register' => [
-            'type' => Literal::class,
-            'options' => [
-                'route' => '/register',
-                'defaults' => [
-                    'controller' => AuthController::class,
-                    'action' => 'register',
+                'logout' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/logout',
+                        'defaults' => [
+                            'action' => 'logout',
+                        ],
+                    ],
                 ],
-            ],
-        ],
+                'register' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/register',
+                        'defaults' => [
+                            'action' => 'register',
+                        ],
+                    ],
+                ],
+            ]
+        ]
     ]
 ];
 

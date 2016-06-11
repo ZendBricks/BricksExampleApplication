@@ -3,7 +3,8 @@
 namespace User\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use User\Api\ApiInterface;
+use User\Api\UserApiInterface;
+use Zend\Authentication\AuthenticationServiceInterface;
 use User\Form\LoginForm;
 
 /**
@@ -12,9 +13,11 @@ use User\Form\LoginForm;
 class AuthController extends AbstractActionController
 {
     protected $api;
-    
-    public function __construct(ApiInterface $api) {
+    protected $authService;
+
+    public function __construct(UserApiInterface $api, AuthenticationServiceInterface $authService) {
         $this->api = $api;
+        $this->authService = $authService;
     }
 
     public function loginAction()

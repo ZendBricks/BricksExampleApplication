@@ -27,6 +27,7 @@
                 <a class="navbar-brand" href="<?php echo $this->url('home') ?>">Example Application</a>
             </div>
             <div class="collapse navbar-collapse">
+                <?php // echo $this->navigation('navigation')->menu()->setMaxDepth(0)->setPartial('layout/navigation')->setUlClass('nav navbar-nav') ?>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="<?php echo $this->url('home') ?>">Home</a></li>
                 </ul>

@@ -5,6 +5,7 @@
         "php": ">=5.6.0",
         "zendframework/zend-mvc": "*",
         "zendframework/zend-cache": "*",
+        "zendframework/zend-serializer": "*",
         "zendframework/zend-form": "*",
         "zendframework/zend-json": "*",
         "zendframework/zend-log": "*",
@@ -15,7 +16,9 @@
         "zendframework/zend-session": "*",
         "zendframework/zend-servicemanager": "*",
         "zendframework/zend-servicemanager-di": "*",
+        "zendframework/zend-navigation": "*",
         "zendframework/zend-crypt": "*",
+        "zendframework/zend-permissions-acl": "*",
         "zend-bricks/bricks-common": "*"
     },
     "autoload": {
