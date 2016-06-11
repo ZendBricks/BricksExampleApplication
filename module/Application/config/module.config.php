@@ -10,6 +10,7 @@ use Zend\I18n\Translator\TranslatorServiceFactory;
 
 return [
     'caches' => require 'caches.config.php',
+    'console' => require 'console.config.php',
     'router' => [
         'routes' => [
             'home' => [
@@ -37,6 +38,7 @@ return [
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,
+            Controller\ConsoleController::class => Controller\ConsoleControllerFactory::class,
         ],
     ],
     'view_manager' => [

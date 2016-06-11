@@ -2,6 +2,7 @@
 
 return [
     'caches' => require 'caches.config.php',
+    'console' => require 'console.config.php',
     'controllers' => require 'controllers.config.php',
     'navigation' => require 'navigation.config.php',
     'router' => require 'router.config.php',

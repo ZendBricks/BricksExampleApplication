@@ -3,6 +3,7 @@
 namespace Application;
 
 use Zend\Mvc\MvcEvent;
+use Zend\Console\Request;
 use Zend\Validator\AbstractValidator;
 
 class Module
@@ -16,9 +17,18 @@ class Module
     
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager = $e->getApplication()->getEventManager();
+        if ($e->getRequest() instanceof Request) {  //exclude console-application
+            return true;
+        }
         
+        $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'prepareTranslator']);
+    }
+    
+    public function getConsoleUsage($console){
+        return [
+            'clear-cache' => 'clear all caches'
+        ];
     }
     
     public function prepareTranslator(MvcEvent $e)

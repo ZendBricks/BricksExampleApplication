@@ -36,6 +36,11 @@ class UserApi implements UserApiInterface
         
     }
     
+    public function addPermission($name)
+    {
+        
+    }
+
     public function getPermissions()
     {
         return [
@@ -56,9 +61,13 @@ class UserApi implements UserApiInterface
     public function getRolePermissions()
     {
         return [
-            'Guest' => 'auth/login',
-            'Guest' => 'auth/register',
-            'User' => 'auth/logout'
+            'Guest' => [
+                'auth/login',
+                'auth/register'
+            ],
+            'User' => [
+                'auth/logout'
+            ]
         ];
     }
 }

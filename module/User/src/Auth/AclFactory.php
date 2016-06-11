@@ -30,8 +30,8 @@ class AclFactory implements FactoryInterface
             }
 
             $rolePermissions = $userApi->getRolePermissions();
-            foreach ($rolePermissions as $role => $permission) {
-                $acl->allow($role, $permission);
+            foreach ($rolePermissions as $role => $permissions) {
+                $acl->allow($role, $permissions);
             }
             
             $aclCache->setItem('Acl', $acl);

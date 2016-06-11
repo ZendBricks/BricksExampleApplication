@@ -42,12 +42,20 @@ interface UserApiInterface {
     public function getRoleNameByIdentity($userId);
     
     /**
+     * Add a new permission
+     * 
+     * @param string $name
+     */
+    public function addPermission($name);
+    
+    /**
      * returns permissions this way:
      * [
      *     'default/home',
      *     'application/index',
      *     'album/delete'
      * ]
+     * 
      * @return array all available permissions
      */
     public function getPermissions();
@@ -59,6 +67,7 @@ interface UserApiInterface {
      *     'User' => ['Guest'],
      *     'Moderator' => ['User']
      * ]
+     * 
      * @return array all available roles
      */
     public function getRoles();
@@ -66,10 +75,15 @@ interface UserApiInterface {
     /**
      * returns granted role - permission combinations this way:
      * [
-     *     'Guest' => 'default/home',
-     *     'Guest' => 'application/index',
-     *     'Moderator' => 'album/delete'
+     *     'Guest' => [
+     *         'default/home',
+     *         'application/index'
+     *     ],
+     *     'Moderator' => [
+     *         'album/delete'
+     *     ]
      * ]
+     * 
      * @return array all granted permissions
      */
     public function getRolePermissions();

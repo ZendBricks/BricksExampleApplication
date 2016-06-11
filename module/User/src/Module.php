@@ -17,12 +17,11 @@ class Module
     
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager = $e->getApplication()->getEventManager();
-        
         if ($e->getRequest() instanceof Request) {  //exclude console-application
             return true;
         }
         
+        $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
         
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function(MvcEvent $e) {   //fix that navigation renders without acl
@@ -70,7 +69,7 @@ class Module
         } else {
             $role = 'Guest';
         }
-
+        
         return $role;
     }
 }
