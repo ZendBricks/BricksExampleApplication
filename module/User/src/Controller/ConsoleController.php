@@ -22,8 +22,7 @@ class ConsoleController extends AbstractConsoleController
         $existingPermissions = $userApi->getPermissions();
         
         $config = $this->container->get('Config');
-        $router = TreeRouteStack::factory($config['router']);
-        $routesExtractor = new RoutesExtractor($router);
+        $routesExtractor = new RoutesExtractor($config['router']);
         $routes = $routesExtractor->getRoutes();
         
         foreach ($routes as $route) {
@@ -32,5 +31,7 @@ class ConsoleController extends AbstractConsoleController
                 echo "added route: $route\n";
             }
         }
+        
+        $this->container->get('AclCache')->flush();
     }
 }

@@ -22,13 +22,15 @@ class Module
         }
         
         $eventManager = $e->getApplication()->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
-        
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function(MvcEvent $e) {   //fix that navigation renders without acl
-            $e->getApplication()->getServiceManager()->get('Acl');
-        });
+//        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
     }
     
+    public function onDispatchError(MvcEvent $e)
+    {
+        $e->getApplication()->getServiceManager()->get('Acl');  //fix that navigation renders without acl
+    }
+
     public function checkAuth(MvcEvent $e)
     {
         /* @var $container ContainerInterface */
@@ -38,13 +40,18 @@ class Module
         $role = $this->getRole($container);
         if (!$acl->isAllowed($role, $e->getRouteMatch()->getMatchedRouteName())) {
             $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function(MvcEvent $e) {
-                $response = $e->getResponse();
-                $response->setStatusCode(302);
                 $e->stopPropagation();
+                
+                $response = $e->getResponse();
+                $response->setStatusCode(403);
+                
+                $viewModel = new \Zend\View\Model\ViewModel();
+                $viewModel->setTemplate('error/403');
+                $e->getViewModel()->addChild($viewModel);
             }, 2);
         }
         
-//        $container->get('viewhelpermanager')->get('navigation')->setRole($role);
+        $container->get('ViewHelperManager')->get('navigation')->setRole($role);
     }
     
     protected function getRole(ContainerInterface $container)

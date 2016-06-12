@@ -2,8 +2,6 @@
 
 namespace Application;
 
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Application\Factory\PdoFactory;
 use Zend\I18n\Translator\TranslatorServiceFactory;
@@ -11,30 +9,7 @@ use Zend\I18n\Translator\TranslatorServiceFactory;
 return [
     'caches' => require 'caches.config.php',
     'console' => require 'console.config.php',
-    'router' => [
-        'routes' => [
-            'home' => [
-                'type' => Literal::class,
-                'options' => [
-                    'route' => '/',
-                    'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action' => 'index',
-                    ],
-                ],
-            ],
-            'application' => [
-                'type' => Segment::class,
-                'options' => [
-                    'route' => '/application[/:action]',
-                    'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action' => 'index',
-                    ],
-                ],
-            ],
-        ],
-    ],
+    'router' => require 'router.config.php',
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => InvokableFactory::class,
@@ -49,7 +24,7 @@ return [
         'exception_template' => 'error/index',
         'template_map' => [
             'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
-            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'error/403' => __DIR__ . '/../view/error/403.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
         ],

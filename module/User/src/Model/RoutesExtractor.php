@@ -2,22 +2,22 @@
 
 namespace User\Model;
 
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Router\Http\Part;
-
 class RoutesExtractor
 {
     protected $router;
     protected $routes;
 
-    public function __construct(TreeRouteStack $router)
+    public function __construct(array $router)
     {
         $this->router = $router;
     }
     
     public function getRoutes()
     {
-        $routes = $this->router->getRoutes()->toArray();
+        $routes = [];
+        if (array_key_exists('routes', $this->router)) {
+            $routes = $this->router['routes'];
+        }
         $this->addRoutes($routes);
         return $this->routes;
     }
@@ -25,10 +25,16 @@ class RoutesExtractor
     protected function addRoutes(array $routes, $prefix = null)
     {
         foreach ($routes as $name => $route) {
-            if ($route instanceof Part) {
-                $this->addRoutes($route->getRoutes()->toArray(), $prefix . $name . '/');
-            } else {
-                $routeName = $prefix . $name;
+            $routeName = $prefix . $name;
+            $mayTerminate = true;
+            if (array_key_exists('child_routes', $route)) {
+                $this->addRoutes($route['child_routes'], $routeName . '/');
+                $mayTerminate = false;
+            }
+            if (array_key_exists('may_terminate', $route)) {
+                $mayTerminate = $route['may_terminate'];
+            }
+            if ($mayTerminate) {
                 $this->routes[] = $routeName;
             }
         }
