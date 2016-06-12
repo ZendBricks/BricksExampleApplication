@@ -7,15 +7,15 @@ return [
             'order' => 800,
             'pages' => [
                 [
-                    'label' => 'register',
-                    'route' => 'auth/register',
-                    'resource' => 'auth/register',
+                    'label' => 'login',
+                    'route' => 'auth/login',
+                    'resource' => 'auth/login',
                     'order' => 100
                 ],
                 [
-                    'label' => 'login',
-                    'route' => 'auth/login',
-                    'resource' => 'login',
+                    'label' => 'register',
+                    'route' => 'auth/register',
+                    'resource' => 'auth/register',
                     'order' => 200
                 ],
                 [

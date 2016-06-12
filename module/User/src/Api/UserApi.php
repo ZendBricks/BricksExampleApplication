@@ -63,22 +63,33 @@ class UserApi implements UserApiInterface
     
     public function getRoles()
     {
-        return [
-            'Guest' => [],
-            'User' => ['Guest']
-        ];
+        $roles = $this->pdo->query("SELECT id,name,parent_role_id FROM role")->fetchAll();
+        $rolesById = [];
+        foreach ($roles as $role) {
+            $rolesById[$role['id']] = $role['name'];
+        }
+        $result = [];
+        foreach ($roles as $role) {
+            $parentRoles = [];
+            $parentRoleId = $role['parent_role_id'];
+            if ($parentRoleId) {
+                $parentRoles[] = $rolesById[$role['parent_role_id']];
+            }
+            $result[$role['name']] = $parentRoles;
+        }
+        return $result;
     }
 
     public function getRolePermissions()
     {
-        return [
-//            'Guest' => [
-//                'auth/login',
-//                'auth/register'
-//            ],
-//            'User' => [
-//                'auth/logout'
-//            ]
-        ];
+        $query = $this->pdo->query("SELECT r.name as role_name,p.name as permission_name FROM role_permission rp INNER JOIN role r ON rp.role_id = r.id INNER JOIN permission p ON rp.permission_id = p.id");
+        $result = [];
+        while ($rolePermission = $query->fetch()) {
+            if (!array_key_exists($rolePermission['role_name'], $result)) {
+                $result[$rolePermission['role_name']] = [];
+            }
+            $result[$rolePermission['role_name']][] = $rolePermission['permission_name'];
+        }
+        return $result;
     }
 }

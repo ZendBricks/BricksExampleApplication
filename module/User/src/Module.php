@@ -22,7 +22,7 @@ class Module
         }
         
         $eventManager = $e->getApplication()->getEventManager();
-//        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
     }
     
@@ -51,7 +51,10 @@ class Module
             }, 2);
         }
         
-        $container->get('ViewHelperManager')->get('navigation')->setRole($role);
+        /* @var $navigationViewhelper \Zend\View\Helper\Navigation */
+        $navigationViewhelper = $container->get('ViewHelperManager')->get('navigation');
+        $navigationViewhelper->setAcl($acl);
+        $navigationViewhelper->setRole($role);
     }
     
     protected function getRole(ContainerInterface $container)
