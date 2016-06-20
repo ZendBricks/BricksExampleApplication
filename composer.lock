@@ -2200,23 +2200,26 @@
         },
         {
             "name": "zendframework/zend-servicemanager-di",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-servicemanager-di.git",
-                "reference": "d894ab9e517ea711772480acb0ecb88deee14672"
+                "reference": "cfd313ed3b3b55532961f1d4e903b0b871de193f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-servicemanager-di/zipball/d894ab9e517ea711772480acb0ecb88deee14672",
-                "reference": "d894ab9e517ea711772480acb0ecb88deee14672",
+                "url": "https://api.github.com/repos/zendframework/zend-servicemanager-di/zipball/cfd313ed3b3b55532961f1d4e903b0b871de193f",
+                "reference": "cfd313ed3b3b55532961f1d4e903b0b871de193f",
                 "shasum": ""
             },
             "require": {
                 "container-interop/container-interop": "^1.1",
-                "php": "^5.5 || ^7.0",
+                "php": "^5.6 || ^7.0",
                 "zendframework/zend-di": "^2.6",
-                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
+                "zendframework/zend-servicemanager": "^3.0.3"
+            },
+            "conflict": {
+                "zendframework/zend-servicemanager": "<3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.5",
@@ -2225,8 +2228,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev",
-                    "dev-develop": "1.1-dev"
+                    "dev-master": "1.1-dev",
+                    "dev-develop": "1.2-dev"
                 },
                 "zf": {
                     "component": "Zend\\ServiceManager\\Di",
@@ -2247,7 +2250,7 @@
                 "di",
                 "zf2"
             ],
-            "time": "2016-06-09 21:23:32"
+            "time": "2016-06-13 17:15:13"
         },
         {
             "name": "zendframework/zend-session",

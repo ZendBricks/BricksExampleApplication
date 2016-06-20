@@ -17,6 +17,6 @@ class ApiAuthAdapter extends AbstractAdapter
     public function authenticate()
     {
         $bcrypt = new Bcrypt();
-        return $bcrypt->verify($this->getCredential(), $this->userApi->getPasswordByUsername($this->getIdentity()));
+        return $bcrypt->verify($this->getCredential(), $this->userApi->getPasswordById($this->getIdentity()));
     }
 }

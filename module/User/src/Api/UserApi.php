@@ -13,26 +13,45 @@ class UserApi implements UserApiInterface
     
     public function setSessionIdentity($sessionId, $identity)
     {
-        
+        if ($this->pdo->query("SELECT id FROM session WHERE identity = '$identity'")->fetch()) {
+            $this->pdo->query("UPDATE session SET id = '$sessionId' WHERE identity = '$identity'");
+        } else {
+            $this->pdo->query("INSERT INTO session VALUES ('$sessionId', '$identity')");
+        }
     }
     
     public function getSessionIdentity($sessionId)
     {
-        
+        $result = $this->pdo->query("SELECT identiy FROM session WHERE id = '$sessionId'")->fetch();
+        if (is_array($result)) {
+            return reset($result);
+        } else {
+            return false;
+        }
     }
     
     public function clearSessionIdentity($sessionId)
     {
-        
+        $this->pdo->query("DELETE FROM session WHERE id = '$sessionId'");
     }
 
-    public function getPasswordByUsername($username)
+    public function getIdByUsername($username)
     {
-        $result = $this->pdo->query("SELECT password FROM user WHERE username = '$username'")->fetch();
+        $result = $this->pdo->query("SELECT id FROM user WHERE username = '$username'")->fetch();
         if (is_array($result)) {
             return reset($result);
         } else {
-            return $result;
+            return false;
+        }
+    }
+
+    public function getPasswordById($id)
+    {
+        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$id'")->fetch();
+        if (is_array($result)) {
+            return reset($result);
+        } else {
+            return false;
         }
     }
 
@@ -42,7 +61,7 @@ class UserApi implements UserApiInterface
         if (is_array($result)) {
             return reset($result);
         } else {
-            return $result;
+            return false;
         }
     }
     

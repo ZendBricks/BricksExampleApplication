@@ -26,13 +26,21 @@ interface UserApiInterface {
     public function clearSessionIdentity($sessionId);
 
     /**
+     * Get the id of a specific user
+     * 
+     * @param string $username
+     * @return int
+     */
+    public function getIdByUsername($username);
+
+    /**
      * Get the password-hash of a specific user
      * this will be used for login
      * 
-     * @param string $username
+     * @param type $id
      * @return string bcrypt hash of the password
      */
-    public function getPasswordByUsername($username);
+    public function getPasswordById($id);
 
     /**
      * Get the role name of the user

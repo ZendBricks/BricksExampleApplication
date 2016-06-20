@@ -22,22 +22,34 @@ class Module
         }
         
         $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'initNavigationViewHelper']);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'initNavigationViewHelper']); //fix full navigation
         $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuth']);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
     }
     
-    public function onDispatchError(MvcEvent $e)
-    {
-        $e->getApplication()->getServiceManager()->get('Acl');  //fix that navigation renders without acl
-    }
-
-    public function checkAuth(MvcEvent $e)
+    public function initNavigationViewHelper(MvcEvent $e)
     {
         /* @var $container ContainerInterface */
         $container = $e->getApplication()->getServiceManager();
         /* @var $acl \Zend\Permissions\Acl\AclInterface */
         $acl = $container->get('Acl');
         $role = $this->getRole($container);
+        
+        /* @var $navigationViewhelper \Zend\View\Helper\Navigation */
+        $navigationViewhelper = $container->get('ViewHelperManager')->get('navigation');
+        $navigationViewhelper->setAcl($acl);
+        $navigationViewhelper->setRole($role);
+    }
+
+    public function checkAuth(MvcEvent $e)
+    {
+        /* @var $container ContainerInterface */
+        $container = $e->getApplication()->getServiceManager();
+        /* @var $navigationViewhelper \Zend\View\Helper\Navigation */
+        $navigationViewhelper = $container->get('ViewHelperManager')->get('navigation');
+        $acl = $navigationViewhelper->getAcl();
+        $role = $navigationViewhelper->getRole();
+        
         if (!$acl->isAllowed($role, $e->getRouteMatch()->getMatchedRouteName())) {
             $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function(MvcEvent $e) {
                 $e->stopPropagation();
@@ -50,11 +62,6 @@ class Module
                 $e->getViewModel()->addChild($viewModel);
             }, 2);
         }
-        
-        /* @var $navigationViewhelper \Zend\View\Helper\Navigation */
-        $navigationViewhelper = $container->get('ViewHelperManager')->get('navigation');
-        $navigationViewhelper->setAcl($acl);
-        $navigationViewhelper->setRole($role);
     }
     
     protected function getRole(ContainerInterface $container)
