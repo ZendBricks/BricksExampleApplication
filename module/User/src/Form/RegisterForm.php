@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Form;
+namespace User\Form;
 
 use Zend\Form\Form;
 use Zend\Form\Element\Text;
@@ -43,7 +43,7 @@ class RegisterForm extends Form
         $imageAdapter = new Image([
             'font' => __DIR__ . '/../../../fonts/arial.ttf'
         ]);
-        $imageAdapter->setImgDir(__DIR__ . '/../../../../../public/img/captcha/');
+        $imageAdapter->setImgDir(__DIR__ . '/../../../../public/img/captcha/');
         $imageAdapter->setImgUrl($basePath . '/img/captcha/');
         $captcha->setCaptcha($imageAdapter);
         $captcha->setLabel('enter.text.from.the.picture');

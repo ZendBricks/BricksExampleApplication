@@ -5,6 +5,8 @@ namespace Application;
 use Zend\ServiceManager\Factory\InvokableFactory;
 use Application\Factory\PdoFactory;
 use Zend\I18n\Translator\TranslatorServiceFactory;
+use Zend\Log\LoggerServiceFactory;
+use Zend\Log\Logger;
 
 return [
     'caches' => require 'caches.config.php',
@@ -35,7 +37,20 @@ return [
     'service_manager' => [
         'factories' => [
             'pdo' => PdoFactory::class,
-            'translator' => TranslatorServiceFactory::class
+            'translator' => TranslatorServiceFactory::class,
+            'logger' => LoggerServiceFactory::class
+        ]
+    ],
+    'log' => [
+        'writers' => [
+            [
+                'name' => 'stream',
+                'priority' => Logger::DEBUG,
+                'options' => [
+                    'stream' => 'data/log/error.log',
+                    'chmod' => 0666
+                ]
+            ]
         ]
     ]
 ];

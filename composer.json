@@ -23,6 +23,7 @@
         "zendframework/zend-crypt": "*",
         "zendframework/zend-permissions-acl": "*",
         "zendframework/zend-i18n": "*",
+        "zendframework/zend-captcha": "*",
         "zend-bricks/bricks-common": "*"
     },
     "autoload": {

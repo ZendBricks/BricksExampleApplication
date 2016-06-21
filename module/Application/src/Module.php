@@ -23,6 +23,7 @@ class Module
         
         $eventManager = $e->getApplication()->getEventManager();
         $eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'prepareTranslator']);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'logError']);
     }
     
     public function getConsoleUsage($console){
@@ -51,5 +52,15 @@ class Module
         $translator->setCache($container->get('TranslatorCache'));
         \Locale::setDefault($language);
 //        AbstractValidator::setDefaultTranslator($translator, 'default');
+    }
+    
+    public function logError(MvcEvent $e)
+    {
+        $error = $e->getResult()->exception;
+        /* @var $container \Interop\Container\ContainerInterface */
+        $container = $e->getApplication()->getServiceManager();
+        /* @var $logger \Zend\Log\Logger */
+        $logger = $container->get('logger');
+        $logger->err($error);
     }
 }

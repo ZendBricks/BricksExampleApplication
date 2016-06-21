@@ -5,7 +5,9 @@ namespace User\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use User\Api\UserApiInterface;
 use Zend\Authentication\AuthenticationService;
+use Zend\View\Renderer\RendererInterface;
 use User\Form\LoginForm;
+use User\Form\RegisterForm;
 
 /**
  * User Authentication
@@ -14,10 +16,12 @@ class AuthController extends AbstractActionController
 {
     protected $api;
     protected $authService;
+    protected $renderer;
 
-    public function __construct(UserApiInterface $api, AuthenticationService $authService) {
+    public function __construct(UserApiInterface $api, AuthenticationService $authService, RendererInterface $renderer) {
         $this->api = $api;
         $this->authService = $authService;
+        $this->renderer = $renderer;
     }
 
     public function loginAction()
@@ -45,12 +49,17 @@ class AuthController extends AbstractActionController
     
     public function logoutAction()
     {
-        
+        $this->authService->clearIdentity();
+        return $this->redirect()->toRoute('home');
     }
     
     public function registerAction()
     {
-        
+        $basePath = $this->renderer->basePath();
+        $form = new RegisterForm($basePath);
+        return [
+            'form' => $form
+        ];
     }
     
     public function confirmRegistrationAction()

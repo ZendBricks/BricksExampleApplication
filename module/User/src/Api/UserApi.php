@@ -13,18 +13,18 @@ class UserApi implements UserApiInterface
     
     public function setSessionIdentity($sessionId, $identity)
     {
-        if ($this->pdo->query("SELECT id FROM session WHERE identity = '$identity'")->fetch()) {
-            $this->pdo->query("UPDATE session SET id = '$sessionId' WHERE identity = '$identity'");
+        if ($this->pdo->query("SELECT id FROM `session` WHERE identity = '$identity'")->fetch()) {
+            $this->pdo->query("UPDATE `session` SET id = '$sessionId' WHERE identity = '$identity'");
         } else {
-            $this->pdo->query("INSERT INTO session VALUES ('$sessionId', '$identity')");
+            $this->pdo->query("INSERT INTO `session` VALUES ('$sessionId', '$identity')");
         }
     }
     
     public function getSessionIdentity($sessionId)
     {
-        $result = $this->pdo->query("SELECT identiy FROM session WHERE id = '$sessionId'")->fetch();
-        if (is_array($result)) {
-            return reset($result);
+        $result = $this->pdo->query("SELECT identity FROM `session` WHERE id = '$sessionId'");
+        if ($result = $result->fetch()) {
+            return $result['identity'];
         } else {
             return false;
         }
@@ -32,14 +32,14 @@ class UserApi implements UserApiInterface
     
     public function clearSessionIdentity($sessionId)
     {
-        $this->pdo->query("DELETE FROM session WHERE id = '$sessionId'");
+        $this->pdo->query("DELETE FROM `session` WHERE id = '$sessionId'");
     }
 
     public function getIdByUsername($username)
     {
-        $result = $this->pdo->query("SELECT id FROM user WHERE username = '$username'")->fetch();
-        if (is_array($result)) {
-            return reset($result);
+        $result = $this->pdo->query("SELECT id FROM user WHERE username = '$username'");
+        if ($result = $result->fetch()) {
+            return $result['id'];
         } else {
             return false;
         }
@@ -47,9 +47,9 @@ class UserApi implements UserApiInterface
 
     public function getPasswordById($id)
     {
-        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$id'")->fetch();
-        if (is_array($result)) {
-            return reset($result);
+        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$id'");
+        if ($result = $result->fetch()) {
+            return $result['password'];
         } else {
             return false;
         }
@@ -57,9 +57,9 @@ class UserApi implements UserApiInterface
 
     public function getRoleNameByIdentity($userId)
     {
-        $result = $this->pdo->query("SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = '$userId'")->fetch();
-        if (is_array($result)) {
-            return reset($result);
+        $result = $this->pdo->query("SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = '$userId'");
+        if ($result = $result->fetch()) {
+            return $result['name'];
         } else {
             return false;
         }
