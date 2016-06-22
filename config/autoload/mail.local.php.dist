@@ -1,0 +1,20 @@
+<?php
+return [
+    'mail' => [
+        'transport' => [
+            'type' => 'smtp',
+            'options' => [
+                'host' => 'REPLACE_SERVICE_HOST',
+                'port' => 587,
+                'connection_class'  => 'plain',
+                'connection_config' => [
+                    'username' => 'REPLACE_SERVICE_MAIL_ADDRESS',
+                    'password' => 'REPLACE_SERVICE_PASSWORD',
+                    'ssl' => 'tls'
+                ]
+            ]
+        ],
+        'senderMail' => 'REPLACE_MAIL_ADDRESS',
+        'senderName' => 'REPLACE_SENDER_NAME'
+    ]
+];

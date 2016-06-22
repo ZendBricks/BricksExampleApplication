@@ -48,7 +48,7 @@ class ApiSessionStorage implements StorageInterface
                 $this->sessionId = $_COOKIE[$this->cookieName];
             } else {
                 $this->sessionId = $this->getNewSessionId();
-                setcookie($this->cookieName, $this->sessionId, time() + $this->cookieLifetime, '', '', true, true);
+                setcookie($this->cookieName, $this->sessionId, time() + $this->cookieLifetime, '/', '');
             }
         }
         return $this->sessionId;

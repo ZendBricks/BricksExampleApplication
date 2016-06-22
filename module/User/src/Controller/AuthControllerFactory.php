@@ -4,7 +4,6 @@ namespace User\Controller;
 
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
-use Zend\View\Renderer\RendererInterface;
 use User\Controller\AuthController;
 
 class AuthControllerFactory implements FactoryInterface
@@ -13,7 +12,6 @@ class AuthControllerFactory implements FactoryInterface
     {
         $api = $container->get('UserApi');
         $authService = $container->get('Auth');
-        $renderer = $container->get(RendererInterface::class);
-        return new AuthController($api, $authService, $renderer);
+        return new AuthController($api, $authService);
     }   
 }

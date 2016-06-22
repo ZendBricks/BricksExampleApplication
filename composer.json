@@ -24,6 +24,7 @@
         "zendframework/zend-permissions-acl": "*",
         "zendframework/zend-i18n": "*",
         "zendframework/zend-captcha": "*",
+        "zendframework/zend-mail": "*",
         "zend-bricks/bricks-common": "*"
     },
     "autoload": {

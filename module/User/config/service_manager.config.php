@@ -7,5 +7,6 @@ return [
         'UserApi' => Api\UserApiFactory::class,
         'Auth' => Auth\AuthServiceFactory::class,
         'Acl' => Auth\AclFactory::class,
+        'UserMailModel' => Model\UserMailModelFactory::class
     ]
 ];

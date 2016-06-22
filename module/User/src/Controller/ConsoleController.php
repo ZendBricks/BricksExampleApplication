@@ -4,7 +4,6 @@ namespace User\Controller;
 
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Interop\Container\ContainerInterface;
-use Zend\Router\Http\TreeRouteStack;
 use User\Model\RoutesExtractor;
 
 class ConsoleController extends AbstractConsoleController

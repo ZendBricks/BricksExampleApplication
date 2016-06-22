@@ -13,7 +13,7 @@ use Zend\Captcha\Image;
 
 class RegisterForm extends Form
 {
-    public function __construct($basePath) {
+    public function __construct() {
         parent::__construct();
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'panel-body');
@@ -41,10 +41,8 @@ class RegisterForm extends Form
         
         $captcha = new Captcha('register_captcha');
         $imageAdapter = new Image([
-            'font' => __DIR__ . '/../../../fonts/arial.ttf'
+            'font' => __DIR__ . '/../../fonts/arial.ttf'
         ]);
-        $imageAdapter->setImgDir(__DIR__ . '/../../../../public/img/captcha/');
-        $imageAdapter->setImgUrl($basePath . '/img/captcha/');
         $captcha->setCaptcha($imageAdapter);
         $captcha->setLabel('enter.text.from.the.picture');
         $captcha->setAttribute('class', 'form-control');
