@@ -1,2 +1,2 @@
 <h2><?php echo $this->translate('confirm.registration') ?></h2>
-<?php echo sprintf($this->translate('registered.as.%s.at.%s.click.%s.to.confirm.registration'), $username, $projectName, '<a href="' . $this->url('home', [], ['force_canonical' => true]) . '">' . $this->translate('here') . '</a>') ?>
+<?php echo sprintf($this->translate('registered.as.%s.at.%s.click.%s.to.confirm.registration'), $username, $projectName, '<a href="' . $this->url('auth/confirmRegistration', ['token' => $token], ['force_canonical' => true]) . '">' . $this->translate('here') . '</a>') ?>

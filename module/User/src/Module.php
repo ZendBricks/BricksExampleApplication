@@ -5,6 +5,7 @@ namespace User;
 use Zend\Mvc\MvcEvent;
 use Zend\Console\Request;
 use Interop\Container\ContainerInterface;
+use Zend\Authentication\AuthenticationService;
 
 class Module
 {
@@ -66,8 +67,8 @@ class Module
     
     protected function getRole(ContainerInterface $container)
     {
-        /* @var $auth \Zend\Authentication\AuthenticationServiceInterface */
-        $auth = $container->get('Auth');
+        /* @var $auth AuthenticationService */
+        $auth = $container->get(AuthenticationService::class);
         
         if ($auth->getIdentity()) {
             /* @var $userRoleCache \Zend\Cache\Storage\StorageInterface */

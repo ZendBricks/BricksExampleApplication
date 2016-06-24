@@ -45,6 +45,15 @@ return [
                         ],
                     ],
                 ],
+                'confirmRegistration' => [
+                    'type' => Segment::class,
+                    'options' => [
+                        'route' => '/confirm-registration/:token',
+                        'defaults' => [
+                            'action' => 'confirmRegistration',
+                        ],
+                    ],
+                ],
             ]
         ]
     ]

@@ -56,8 +56,6 @@ class MailModel
         $this->addMailTargets($mail);
         $mail->setEncoding('UTF-8');
         $mail->setBody($content);
-        
-        return $mail;
     }
     
     protected function addMailTargets(MailMessage $mail) {

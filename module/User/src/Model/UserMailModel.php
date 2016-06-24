@@ -7,10 +7,12 @@ use Zend\Mail\Message as MailMessage;
 
 class UserMailModel extends MailModel
 {
-    public function sendConfirmRegistrationMail($projectName, $username, $token) {
+    public function sendConfirmRegistrationMail($email, $username, $token, $projectName)
+    {
         $translator = $this->getTranslator();
         $mail = new MailMessage();
         $mail->setSubject(sprintf($translator->translate('confirm.registration.at.%s'), $projectName));
+        $this->addTarget($email, $username);
         
         $viewVariables = [
             'projectName' => $projectName,
@@ -18,7 +20,7 @@ class UserMailModel extends MailModel
             'token' => $token
         ];
         
-        $mail = $this->prepareMail($mail, $viewVariables, 'mail/confirm-registration.phtml');
+        $this->prepareMail($mail, $viewVariables, 'mail/confirm-registration.phtml');
         $this->sendMail($mail);
     }
 }

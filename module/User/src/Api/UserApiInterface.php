@@ -32,6 +32,12 @@ interface UserApiInterface {
      * @return int
      */
     public function getIdByUsername($username);
+    
+    /**
+     * @param string $email
+     * @return int
+     */
+    public function getIdByEmail($email);
 
     /**
      * Get the password-hash of a specific user
@@ -95,4 +101,31 @@ interface UserApiInterface {
      * @return array all granted permissions
      */
     public function getRolePermissions();
+    
+    /**
+     * Add an unactivated user
+     * 
+     * @param string $username
+     * @param string $mail
+     * @param string $password
+     * @return int $userId
+     */
+    public function registerUser($username, $mail, $password);
+    
+    /**
+     * @param string|int $userId
+     * @param string $token
+     */
+    public function createRegisterToken($userId, $token);
+    
+    /**
+     * @param string $token
+     * @return string|int
+     */
+    public function getUserIdByRegisterToken($token);
+            
+    /**
+     * @param string|int $userId
+     */
+    public function deleteRegisterToken($userId);
 }

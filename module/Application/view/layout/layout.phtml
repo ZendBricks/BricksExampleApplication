@@ -29,6 +29,12 @@
             </div>
         </nav>
         <div class="col-xs-12">
+            <?= $this->flashMessenger()->renderCurrent('error', ['alert', 'alert-danger'], true) ?>
+            <?= $this->flashMessenger()->render('success', ['alert', 'alert-success'], true) ?>
+            <?= $this->flashMessenger()->render('warning', ['alert', 'alert-warning'], true) ?>
+            <?= $this->flashMessenger()->render('info', ['alert', 'alert-info'], true) ?>
+        </div>
+        <div class="col-xs-12">
             <?= $content; ?>
             <hr>
             <footer>

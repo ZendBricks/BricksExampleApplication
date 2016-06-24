@@ -52,5 +52,6 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+    'view_helper_config' => require 'view_helper_config.config.php'
 ];

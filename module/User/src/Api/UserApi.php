@@ -44,6 +44,16 @@ class UserApi implements UserApiInterface
             return false;
         }
     }
+    
+    public function getIdByEmail($email)
+    {
+        $result = $this->pdo->query("SELECT id FROM user WHERE email = '$email'");
+        if ($result = $result->fetch()) {
+            return $result['id'];
+        } else {
+            return false;
+        }
+    }
 
     public function getPasswordById($id)
     {
@@ -110,5 +120,31 @@ class UserApi implements UserApiInterface
             $result[$rolePermission['role_name']][] = $rolePermission['permission_name'];
         }
         return $result;
+    }
+    
+    public function registerUser($username, $mail, $password)
+    {
+        $this->pdo->query("INSERT INTO user (username, email, password) VALUES('$username', '$mail', '$password')");
+        return $this->pdo->lastInsertId();
+    }
+    
+    public function createRegisterToken($userId, $token)
+    {
+        $this->pdo->query("INSERT INTO register_token (user_id, token) VALUES('$userId', '$token')");
+    }
+
+    public function getUserIdByRegisterToken($token)
+    {
+        $result = $this->pdo->query("SELECT user_id FROM register_token WHERE token = '$token'");
+        if ($result = $result->fetch()) {
+            return $result['user_id'];
+        } else {
+            return false;
+        }
+    }
+    
+    public function deleteRegisterToken($userId)
+    {
+        $this->pdo->query("DELETE FROM register_token WHERE user_id = '$userId'");
     }
 }
