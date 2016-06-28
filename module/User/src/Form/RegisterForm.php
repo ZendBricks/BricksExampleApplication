@@ -43,6 +43,11 @@ class RegisterForm extends Form
         $imageAdapter = new Image([
             'font' => __DIR__ . '/../../fonts/arial.ttf'
         ]);
+        $imageAdapter->setHeight(100);
+        $imageAdapter->setWidth(400);
+        $imageAdapter->setFontSize(48);
+        $imageAdapter->setDotNoiseLevel(400);
+        $imageAdapter->setLineNoiseLevel(40);
         $captcha->setCaptcha($imageAdapter);
         $captcha->setLabel('enter.text.from.the.picture');
         $captcha->setAttribute('class', 'form-control');

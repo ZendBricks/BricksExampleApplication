@@ -7,10 +7,20 @@ CREATE TABLE `permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `permission` WRITE;
-INSERT INTO `permission` VALUES (3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(1,'home'),(2,'sitemap');
+INSERT INTO `permission` VALUES (6,'auth/confirmRegistration'),(3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(1,'home'),(2,'sitemap');
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `register_token`;
+CREATE TABLE `register_token` (
+  `user_id` int(11) NOT NULL,
+  `token` varchar(52) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -30,12 +40,12 @@ CREATE TABLE `role_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `role_permission` WRITE;
-INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4);
+INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4),(1,6);
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `session`;
 CREATE TABLE `session` (
-  `id` varchar(26) NOT NULL,
+  `id` varchar(52) NOT NULL,
   `identity` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `session_identity_idx` (`identity`)
@@ -46,7 +56,8 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
   `email` varchar(25) NOT NULL,
-  `password` varchar(50) DEFAULT NULL,
+  `password` varchar(60) DEFAULT NULL,
+  `role_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)

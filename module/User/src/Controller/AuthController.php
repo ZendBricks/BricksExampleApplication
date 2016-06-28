@@ -9,6 +9,7 @@ use User\Form\LoginForm;
 use User\Form\RegisterForm;
 use Zend\Crypt\Password\Bcrypt;
 use User\Model\UserMailModel;
+use Zend\Authentication\Result;
 
 /**
  * User Authentication
@@ -39,8 +40,15 @@ class AuthController extends AbstractActionController
                 $userId = $this->api->getIdByUsername($formData['username']);
                 $adapter->setIdentity($userId);
                 $adapter->setCredential($formData['password']);
-                if ($this->authService->authenticate()) {
-                    return $this->redirect()->toRoute('home');
+                if ($this->authService->authenticate()->getCode() == Result::SUCCESS) {
+                    if ($this->api->isUserActivated($userId)) {
+                        return $this->redirect()->toRoute('home');
+                    } else {
+                        $this->authService->clearIdentity();
+                        $this->flashMessenger()->addErrorMessage('user.not.active');
+                    }
+                } else {
+                    $this->flashMessenger()->addErrorMessage('login.failed');
                 }
             }        
         }
@@ -70,7 +78,7 @@ class AuthController extends AbstractActionController
                     $bcrypt = new Bcrypt();
                     $passwordHash = $bcrypt->create($formData['password']);
                     $userId = $this->api->registerUser($formData['username'], $formData['email'], $passwordHash);
-                    $token = openssl_random_pseudo_bytes(26);
+                    $token = bin2hex(openssl_random_pseudo_bytes(26));
                     $this->api->createRegisterToken($userId, $token);
                     $this->mailModel->sendConfirmRegistrationMail($formData['email'], $formData['username'], $token, $this->projectName);
                     return $this->redirect()->toRoute('home');
@@ -87,11 +95,13 @@ class AuthController extends AbstractActionController
         $token = $this->params()->fromRoute('token');
         $userId = $this->api->getUserIdByRegisterToken($token);
         if ($userId) {
-            
+            $this->api->activateUser($userId);
             $this->api->deleteRegisterToken($userId);
+            $this->flashMessenger()->addSuccessMessage('user.activated');
         } else {
-            return $this->redirect()->toRoute('home');
+            $this->flashMessenger()->addErrorMessage('user.not.activated');
         }
+        return $this->redirect()->toRoute('home');
     }
     
     public function resendRegisterMailAction()

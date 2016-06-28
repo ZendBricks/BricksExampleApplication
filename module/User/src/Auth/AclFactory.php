@@ -34,6 +34,11 @@ class AclFactory implements FactoryInterface
                 $acl->allow($role, $permissions);
             }
             
+            $deniedRolePermissions = $userApi->getDeniedRolePermissions();
+            foreach ($deniedRolePermissions as $role => $permissions) {
+                $acl->deny($role, $permissions);
+            }
+            
             $aclCache->setItem('Acl', $acl);
         }
         

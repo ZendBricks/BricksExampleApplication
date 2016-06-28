@@ -43,11 +43,22 @@ interface UserApiInterface {
      * Get the password-hash of a specific user
      * this will be used for login
      * 
-     * @param type $id
+     * @param int|string $userId
      * @return string bcrypt hash of the password
      */
-    public function getPasswordById($id);
+    public function getPasswordById($userId);
 
+    /**
+     * @param int|string $userId
+     * @return bool
+     */
+    public function isUserActivated($userId);
+    
+    /**
+     * @param int|string $userId
+     */
+    public function activateUser($userId);
+    
     /**
      * Get the role name of the user
      * 
@@ -101,6 +112,19 @@ interface UserApiInterface {
      * @return array all granted permissions
      */
     public function getRolePermissions();
+    
+    /**
+     * returns granted role - permission combinations this way:
+     * [
+     *     'User' => [
+     *         'auth/login',
+     *         'auth/register'
+     *     ]
+     * ]
+     * 
+     * @return array all denied permissions
+     */
+    public function getDeniedRolePermissions();
     
     /**
      * Add an unactivated user

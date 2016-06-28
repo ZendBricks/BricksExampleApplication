@@ -55,14 +55,30 @@ class UserApi implements UserApiInterface
         }
     }
 
-    public function getPasswordById($id)
+    public function getPasswordById($userId)
     {
-        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$id'");
+        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$userId'");
         if ($result = $result->fetch()) {
             return $result['password'];
         } else {
             return false;
         }
+    }
+    
+    public function isUserActivated($userId)
+    {
+        $result = $this->pdo->query("SELECT role_id FROM user WHERE id = '$userId'");
+        $result = $result->fetch();
+        if ($result && $result['role_id'] != 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function activateUser($userId)
+    {
+        $this->pdo->query("UPDATE user SET role_id = (SELECT id FROM role WHERE name = 'User') WHERE id = $userId");
     }
 
     public function getRoleNameByIdentity($userId)
@@ -122,9 +138,19 @@ class UserApi implements UserApiInterface
         return $result;
     }
     
+    public function getDeniedRolePermissions()
+    {
+        return [
+            'User' => [
+                'auth/login',
+                'auth/register'
+            ]
+        ];
+    }
+
     public function registerUser($username, $mail, $password)
     {
-        $this->pdo->query("INSERT INTO user (username, email, password) VALUES('$username', '$mail', '$password')");
+        $this->pdo->query("INSERT INTO user (username, email, password, role_id) VALUES('$username', '$mail', '$password', 1)");
         return $this->pdo->lastInsertId();
     }
     

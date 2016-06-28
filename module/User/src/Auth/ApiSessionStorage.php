@@ -26,7 +26,7 @@ class ApiSessionStorage implements StorageInterface
     public function read()
     {
         if (!$this->sessionIdentity) {
-            $this->userApi->getSessionIdentity($this->getSessionId());
+            $this->sessionIdentity = $this->userApi->getSessionIdentity($this->getSessionId());
         }
         return $this->sessionIdentity;
     }
@@ -56,6 +56,6 @@ class ApiSessionStorage implements StorageInterface
     
     protected function getNewSessionId()
     {
-        return openssl_random_pseudo_bytes($this->sessionIdLength);
+        return bin2hex(openssl_random_pseudo_bytes($this->sessionIdLength));
     }
 }
