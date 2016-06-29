@@ -25,7 +25,8 @@
         "zendframework/zend-i18n": "*",
         "zendframework/zend-captcha": "*",
         "zendframework/zend-mail": "*",
-        "zend-bricks/bricks-common": "*"
+        "zend-bricks/bricks-common": "*",
+        "zendframework/zend-developer-tools": "*"
     },
     "autoload": {
         "psr-4": {

@@ -18,7 +18,8 @@ return [
         'Zend\I18n',
         'Zend\Validator',
         'Application',
-        'User'
+        'User',
+        'ZendDeveloperTools'
     ],
     'module_listener_options' => [
         'module_paths' => [

@@ -1,0 +1,27 @@
+<?php
+return [
+    'zenddevelopertools' => [
+        'profiler' => [
+            'enabled' => true,
+            'strict' => true,
+            'flush_early' => false,
+            'cache_dir' => 'data/cache',
+            'matcher' => [
+                'ip' => '127.0.0.1'
+            ],
+            'collectors' => [],
+        ],
+        'events' => [
+            'enabled' => true,
+            'collectors' => [],
+            'identifiers' => [],
+        ],
+        'toolbar' => [
+            'enabled' => true,
+            'auto_hide' => true,
+            'position' => 'bottom',
+            'version_check' => false,
+            'entries' => [],
+        ],
+    ],
+];
