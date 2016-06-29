@@ -10,6 +10,7 @@ use User\Form\RegisterForm;
 use Zend\Crypt\Password\Bcrypt;
 use User\Model\UserMailModel;
 use Zend\Authentication\Result;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 /**
  * User Authentication
@@ -20,12 +21,14 @@ class AuthController extends AbstractActionController
     protected $authService;
     protected $mailModel;
     protected $projectName;
+    protected $userRoleCache;
 
-    public function __construct(UserApiInterface $api, AuthenticationService $authService, UserMailModel $mailModel, $projectName) {
+    public function __construct(UserApiInterface $api, AuthenticationService $authService, UserMailModel $mailModel, $projectName, AbstractAdapter $userRoleCache) {
         $this->api = $api;
         $this->authService = $authService;
         $this->mailModel = $mailModel;
         $this->projectName = $projectName;
+        $this->userRoleCache = $userRoleCache;
     }
 
     public function loginAction()
@@ -97,6 +100,7 @@ class AuthController extends AbstractActionController
         if ($userId) {
             $this->api->activateUser($userId);
             $this->api->deleteRegisterToken($userId);
+            $this->userRoleCache->removeItem($userId);
             $this->flashMessenger()->addSuccessMessage('user.activated');
         } else {
             $this->flashMessenger()->addErrorMessage('user.not.activated');

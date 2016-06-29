@@ -348,16 +348,16 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "3.0.2",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-code.git",
-                "reference": "57cfbcf794a79985278d6308325bc86060af588c"
+                "reference": "cdd9d0ff36c09772ca787c9c54318115f65d4fab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/57cfbcf794a79985278d6308325bc86060af588c",
-                "reference": "57cfbcf794a79985278d6308325bc86060af588c",
+                "url": "https://api.github.com/repos/zendframework/zend-code/zipball/cdd9d0ff36c09772ca787c9c54318115f65d4fab",
+                "reference": "cdd9d0ff36c09772ca787c9c54318115f65d4fab",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-04-20 17:34:49"
+            "time": "2016-06-27 22:07:15"
         },
         {
             "name": "zendframework/zend-config",
@@ -2418,16 +2418,16 @@
         },
         {
             "name": "zendframework/zend-session",
-            "version": "2.7.1",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-session.git",
-                "reference": "79002c7b3e83477217121936c2577526f15555b1"
+                "reference": "f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-session/zipball/79002c7b3e83477217121936c2577526f15555b1",
-                "reference": "79002c7b3e83477217121936c2577526f15555b1",
+                "url": "https://api.github.com/repos/zendframework/zend-session/zipball/f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed",
+                "reference": "f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed",
                 "shasum": ""
             },
             "require": {
@@ -2480,7 +2480,7 @@
                 "session",
                 "zf2"
             ],
-            "time": "2016-05-11 17:01:53"
+            "time": "2016-06-24 15:52:13"
         },
         {
             "name": "zendframework/zend-stdlib",

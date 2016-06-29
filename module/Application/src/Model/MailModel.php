@@ -67,9 +67,10 @@ class MailModel
     protected function getRenderContent(array $variables, $mailTemplateName) {
         $viewModel = new ViewModel($variables);
         $viewModel->setTemplate($mailTemplateName);
-        $viewModel->setTerminal(true);
-        
-        return $this->renderer->render($viewModel);
+        $content = $this->renderer->render($viewModel);
+        $layoutModel = new ViewModel(['content' => $content]);
+        $layoutModel->setTemplate('mail/layout.phtml');
+        return $this->renderer->render($layoutModel);
     }
     
     protected function sendMail($mail) {
