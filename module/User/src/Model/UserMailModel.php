@@ -23,4 +23,21 @@ class UserMailModel extends MailModel
         $this->prepareMail($mail, $viewVariables, 'mail/confirm-registration.phtml');
         $this->sendMail($mail);
     }
+    
+    public function sendForgotPasswordMail($email, $username, $token, $projectName)
+    {
+        $translator = $this->getTranslator();
+        $mail = new MailMessage();
+        $mail->setSubject(sprintf($translator->translate('forgot.password.at.%s'), $projectName));
+        $this->addTarget($email, $username);
+        
+        $viewVariables = [
+            'projectName' => $projectName,
+            'username' => $username,
+            'token' => $token
+        ];
+        
+        $this->prepareMail($mail, $viewVariables, 'mail/forgot-password.phtml');
+        $this->sendMail($mail);
+    }
 }

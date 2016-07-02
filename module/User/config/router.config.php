@@ -54,6 +54,51 @@ return [
                         ],
                     ],
                 ],
+                'resendRegisterMail' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/resend-register-mail',
+                        'defaults' => [
+                            'action' => 'resendRegisterMail',
+                        ],
+                    ],
+                ],
+                'forgotPassword' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/forgot-password',
+                        'defaults' => [
+                            'action' => 'forgotPassword',
+                        ],
+                    ],
+                ],
+                'changePassword' => [
+                    'type' => Segment::class,
+                    'options' => [
+                        'route' => '/change-password[/:token]',
+                        'defaults' => [
+                            'action' => 'changePassword',
+                        ],
+                    ],
+                ],
+                'selfDelete' => [
+                    'type' => Literal::class,
+                    'options' => [
+                        'route' => '/self-delete',
+                        'defaults' => [
+                            'action' => 'selfDelete',
+                        ],
+                    ],
+                ],
+                'confirmSelfDelete' => [
+                    'type' => Segment::class,
+                    'options' => [
+                        'route' => '/confirm-self-delete/:token',
+                        'defaults' => [
+                            'action' => 'confirmSelfDelete',
+                        ],
+                    ],
+                ]
             ]
         ]
     ]

@@ -37,8 +37,10 @@ class UserApi implements UserApiInterface
 
     public function getIdByUsername($username)
     {
-        $result = $this->pdo->query("SELECT id FROM user WHERE username = '$username'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare("SELECT id FROM user WHERE username = :username");
+        $stmt->bindParam('username', $username);
+        $stmt->execute();
+        if ($result = $stmt->fetch()) {
             return $result['id'];
         } else {
             return false;
@@ -50,6 +52,16 @@ class UserApi implements UserApiInterface
         $result = $this->pdo->query("SELECT id FROM user WHERE email = '$email'");
         if ($result = $result->fetch()) {
             return $result['id'];
+        } else {
+            return false;
+        }
+    }
+    
+    public function getUsernameById($userId)
+    {
+        $result = $this->pdo->query("SELECT username FROM user WHERE id = '$userId'");
+        if ($result = $result->fetch()) {
+            return $result['username'];
         } else {
             return false;
         }
@@ -156,6 +168,7 @@ class UserApi implements UserApiInterface
     
     public function createRegisterToken($userId, $token)
     {
+        $this->pdo->query("DELETE FROM register_token WHERE user_id = '$userId'");
         $this->pdo->query("INSERT INTO register_token (user_id, token) VALUES('$userId', '$token')");
     }
 
@@ -172,5 +185,31 @@ class UserApi implements UserApiInterface
     public function deleteRegisterToken($userId)
     {
         $this->pdo->query("DELETE FROM register_token WHERE user_id = '$userId'");
+    }
+    
+    public function createPasswordToken($userId, $token)
+    {
+        $this->pdo->query("DELETE FROM password_token WHERE user_id = '$userId'");
+        $this->pdo->query("INSERT INTO password_token (user_id, token) VALUES('$userId', '$token')");
+    }
+
+    public function getUserIdByPasswordToken($token)
+    {
+        $result = $this->pdo->query("SELECT user_id FROM password_token WHERE token = '$token'");
+        if ($result = $result->fetch()) {
+            return $result['user_id'];
+        } else {
+            return false;
+        }
+    }
+    
+    public function deletePasswordToken($userId)
+    {
+        $this->pdo->query("DELETE FROM password_token WHERE user_id = '$userId'");
+    }
+    
+    public function setPassword($userId, $password)
+    {
+        $this->pdo->query("UPDATE user SET password = '$password' WHERE id = '$userId'");
     }
 }

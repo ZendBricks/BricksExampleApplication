@@ -38,6 +38,12 @@ interface UserApiInterface {
      * @return int
      */
     public function getIdByEmail($email);
+    
+    /**
+     * @param int|string $userId
+     * @return string
+     */
+    public function getUsernameById($userId);
 
     /**
      * Get the password-hash of a specific user
@@ -62,7 +68,7 @@ interface UserApiInterface {
     /**
      * Get the role name of the user
      * 
-     * @param string|int $userId
+     * @param int|string $userId
      */
     public function getRoleNameByIdentity($userId);
     
@@ -132,24 +138,49 @@ interface UserApiInterface {
      * @param string $username
      * @param string $mail
      * @param string $password
-     * @return int $userId
+     * @return int|string $userId
      */
     public function registerUser($username, $mail, $password);
     
     /**
-     * @param string|int $userId
+     * Delete all old register tokens of the user and save the new given $token
+     * 
+     * @param int|string $userId
      * @param string $token
      */
     public function createRegisterToken($userId, $token);
     
     /**
      * @param string $token
-     * @return string|int
+     * @return int|string
      */
     public function getUserIdByRegisterToken($token);
             
     /**
-     * @param string|int $userId
+     * @param int|string $userId
      */
     public function deleteRegisterToken($userId);
+    
+    /**
+     * @param int|string $userId
+     * @param string $token
+     */
+    public function createPasswordToken($userId, $token);
+
+    /**
+     * @param string $token
+     * @return int|string
+     */
+    public function getUserIdByPasswordToken($token);
+    
+    /**
+     * @param int|string $userId
+     */
+    public function deletePasswordToken($userId);
+    
+    /**
+     * @param int|string $userId
+     * @param string $password
+     */
+    public function setPassword($userId, $password);
 }

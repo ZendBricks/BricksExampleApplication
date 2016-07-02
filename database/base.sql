@@ -7,11 +7,19 @@ CREATE TABLE `permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `permission` WRITE;
-INSERT INTO `permission` VALUES (6,'auth/confirmRegistration'),(3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(1,'home'),(2,'sitemap');
+INSERT INTO `permission` VALUES (9,'auth/changePassword'),(6,'auth/confirmRegistration'),(11,'auth/confirmSelfDelete'),(8,'auth/forgotPassword'),(3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(7,'auth/resendRegisterMail'),(10,'auth/selfDelete'),(1,'home'),(2,'sitemap');
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `register_token`;
 CREATE TABLE `register_token` (
+  `user_id` int(11) NOT NULL,
+  `token` varchar(52) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `token` (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `password_token`;
+CREATE TABLE `password_token` (
   `user_id` int(11) NOT NULL,
   `token` varchar(52) NOT NULL,
   PRIMARY KEY (`user_id`),
@@ -40,7 +48,7 @@ CREATE TABLE `role_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `role_permission` WRITE;
-INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4),(1,6);
+INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11);
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `session`;
