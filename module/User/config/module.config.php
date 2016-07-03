@@ -5,6 +5,7 @@ namespace User;
 use ZendBricks\BricksUser\Api\UserApiInterface;
 
 return [
+    'caches' => require 'caches.config.php',
     'service_manager' => [
         'factories' => [
             UserApiInterface::SERVICE_NAME => Api\UserApiFactory::class

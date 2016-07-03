@@ -11,6 +11,6 @@ class UserApiFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $pdo = $container->get('pdo');
-        return new UserApi($pdo);
+        return new UserApi($pdo, $container);
     }   
 }

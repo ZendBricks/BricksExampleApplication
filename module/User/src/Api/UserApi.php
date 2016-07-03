@@ -3,14 +3,17 @@
 namespace User\Api;
 
 use ZendBricks\BricksUser\Api\UserApiInterface;
+use Interop\Container\ContainerInterface;
 
 class UserApi implements UserApiInterface
 {
     protected $pdo;
-    
-    public function __construct(\PDO $pdo)
+    protected $container;
+
+    public function __construct(\PDO $pdo, ContainerInterface $container)
     {
         $this->pdo = $pdo;
+        $this->container = $container;
     }
     
     public function setSessionIdentity($sessionId, $identity)
@@ -97,12 +100,19 @@ class UserApi implements UserApiInterface
 
     public function getRoleNameByIdentity($userId)
     {
-        $result = $this->pdo->query("SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = '$userId'");
-        if ($result = $result->fetch()) {
-            return $result['name'];
-        } else {
-            return false;
+        /* @var $userRoleCache \Zend\Cache\Storage\Adapter\AbstractAdapter */
+        $userRoleCache = $this->container->get('UserRoleCache');
+        $role = $userRoleCache->getItem($userId);
+        if (!$role) {
+            $result = $this->pdo->query("SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = '$userId'");
+            if ($result = $result->fetch()) {
+                $role = $result['name'];
+                $userRoleCache->setItem($userId, $role);
+            } else {
+                return false;
+            }
         }
+        return $role;
     }
     
     public function addPermission($name)
@@ -213,5 +223,12 @@ class UserApi implements UserApiInterface
     public function setPassword($userId, $password)
     {
         $this->pdo->query("UPDATE user SET password = '$password' WHERE id = '$userId'");
+    }
+    
+    public function onRoleChanged($userId)
+    {
+        /* @var $userRoleCache \Zend\Cache\Storage\Adapter\AbstractAdapter */
+        $userRoleCache = $this->container->get('UserRoleCache');
+        $userRoleCache->removeItem($userId);
     }
 }
