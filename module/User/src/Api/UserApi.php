@@ -2,6 +2,8 @@
 
 namespace User\Api;
 
+use ZendBricks\BricksUser\Api\UserApiInterface;
+
 class UserApi implements UserApiInterface
 {
     protected $pdo;

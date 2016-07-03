@@ -17,9 +17,10 @@ return [
         'Zend\Navigation',
         'Zend\I18n',
         'Zend\Validator',
+        'ZendDeveloperTools',
         'Application',
-        'User',
-        'ZendDeveloperTools'
+        'ZendBricks\BricksUser',
+        'User'
     ],
     'module_listener_options' => [
         'module_paths' => [

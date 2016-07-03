@@ -26,6 +26,7 @@
         "zendframework/zend-captcha": "*",
         "zendframework/zend-mail": "*",
         "zend-bricks/bricks-common": "*",
+        "zend-bricks/bricks-user": "*",
         "zendframework/zend-developer-tools": "*"
     },
     "autoload": {

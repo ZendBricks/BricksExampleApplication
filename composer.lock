@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "17862cd035acd3d7d94a524743c9622a",
-    "content-hash": "214b409d0f560401794ca646f7ab51cd",
+    "hash": "daaa2e88b19bb91d9caba699e91a9cce",
+    "content-hash": "02726e75af7c0e0edc0be848d4ea7c89",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -127,12 +127,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zend-bricks/bricks-common.git",
-                "reference": "fb5503cffaa980ecb5a5f71be6bef0a52a6cbc04"
+                "reference": "e0688921c57c826ef270df2ea386badc485e6100"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zend-bricks/bricks-common/zipball/fb5503cffaa980ecb5a5f71be6bef0a52a6cbc04",
-                "reference": "fb5503cffaa980ecb5a5f71be6bef0a52a6cbc04",
+                "url": "https://api.github.com/repos/zend-bricks/bricks-common/zipball/e0688921c57c826ef270df2ea386badc485e6100",
+                "reference": "e0688921c57c826ef270df2ea386badc485e6100",
                 "shasum": ""
             },
             "require": {
@@ -156,7 +156,64 @@
                 "php",
                 "zend"
             ],
-            "time": "2016-06-03 21:23:44"
+            "time": "2016-07-03 07:35:00"
+        },
+        {
+            "name": "zend-bricks/bricks-user",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zend-bricks/bricks-user.git",
+                "reference": "9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zend-bricks/bricks-user/zipball/9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7",
+                "reference": "9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-intl": "*",
+                "ext-mcrypt": "*",
+                "php": ">=5.6.0",
+                "zend-bricks/bricks-common": "*",
+                "zendframework/zend-cache": "*",
+                "zendframework/zend-captcha": "*",
+                "zendframework/zend-crypt": "*",
+                "zendframework/zend-developer-tools": "*",
+                "zendframework/zend-form": "*",
+                "zendframework/zend-i18n": "*",
+                "zendframework/zend-json": "*",
+                "zendframework/zend-mvc": "*",
+                "zendframework/zend-mvc-console": "*",
+                "zendframework/zend-mvc-i18n": "*",
+                "zendframework/zend-mvc-plugins": "*",
+                "zendframework/zend-navigation": "*",
+                "zendframework/zend-permissions-acl": "*",
+                "zendframework/zend-serializer": "*",
+                "zendframework/zend-servicemanager": "*",
+                "zendframework/zend-servicemanager-di": "*",
+                "zendframework/zend-session": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZendBricks\\BricksUser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "description": "auth & user management",
+            "keywords": [
+                "bricks",
+                "php",
+                "user",
+                "zend"
+            ],
+            "time": "2016-07-03 07:47:42"
         },
         {
             "name": "zendframework/zend-authentication",
