@@ -71,6 +71,16 @@ class UserApi implements UserApiInterface
             return false;
         }
     }
+    
+    public function getEmailById($userId)
+    {
+        $result = $this->pdo->query("SELECT email FROM user WHERE id = '$userId'");
+        if ($result = $result->fetch()) {
+            return $result['email'];
+        } else {
+            return false;
+        }
+    }
 
     public function getPasswordById($userId)
     {
@@ -96,6 +106,11 @@ class UserApi implements UserApiInterface
     public function activateUser($userId)
     {
         $this->pdo->query("UPDATE user SET role_id = (SELECT id FROM role WHERE name = 'User') WHERE id = $userId");
+    }
+    
+    public function deleteUser($userId)
+    {
+        $this->pdo->query("DELETE FROM user WHERE id = '$userId'");
     }
 
     public function getRoleNameByIdentity($userId)
@@ -223,6 +238,27 @@ class UserApi implements UserApiInterface
     public function setPassword($userId, $password)
     {
         $this->pdo->query("UPDATE user SET password = '$password' WHERE id = '$userId'");
+    }
+    
+    public function createDeleteToken($userId, $token)
+    {
+        $this->pdo->query("DELETE FROM delete_token WHERE user_id = '$userId'");
+        $this->pdo->query("INSERT INTO delete_token (user_id, token) VALUES('$userId', '$token')");
+    }
+    
+    public function getUserIdByDeleteToken($token)
+    {
+        $result = $this->pdo->query("SELECT user_id FROM delete_token WHERE token = '$token'");
+        if ($result = $result->fetch()) {
+            return $result['user_id'];
+        } else {
+            return false;
+        }
+    }
+    
+    public function deleteDeleteToken($userId)
+    {
+        $this->pdo->query("DELETE FROM delete_token WHERE user_id = '$userId'");
     }
     
     public function onRoleChanged($userId)
