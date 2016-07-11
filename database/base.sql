@@ -7,7 +7,7 @@ CREATE TABLE `permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `permission` WRITE;
-INSERT INTO `permission` VALUES (9,'auth/changePassword'),(6,'auth/confirmRegistration'),(11,'auth/confirmSelfDelete'),(8,'auth/forgotPassword'),(3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(7,'auth/resendRegisterMail'),(10,'auth/selfDelete'),(1,'home'),(2,'sitemap');
+INSERT INTO `permission` VALUES (9,'auth/changePassword'),(6,'auth/confirmRegistration'),(11,'auth/confirmSelfDelete'),(8,'auth/forgotPassword'),(3,'auth/login'),(4,'auth/logout'),(5,'auth/register'),(7,'auth/resendRegisterMail'),(10,'auth/selfDelete'),(1,'home'),(13,'role/create'),(16,'role/delete'),(15,'role/edit'),(12,'role/list'),(14,'role/show'),(2,'sitemap'),(20,'user/delete'),(19,'user/edit'),(17,'user/list'),(18,'user/show');
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `register_token`;
@@ -27,18 +27,25 @@ CREATE TABLE `password_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `parent_role_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `role` WRITE;
-INSERT INTO `role` VALUES (1,'Guest',NULL),(2,'User',1),(3,'Moderator',2),(4,'Admin',3);
+INSERT INTO `role` VALUES (1,'Guest'),(2,'User'),(3,'Moderator'),(4,'Admin');
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `role_parent_role`;
+CREATE TABLE `role_parent_role` (
+  `role_id` int(11) NOT NULL,
+  `parent_role_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `role_parent_role` WRITE;
+INSERT INTO `role_parent_role` VALUES (2,1),(3,2),(4,3);
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `role_permission`;
@@ -48,7 +55,7 @@ CREATE TABLE `role_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `role_permission` WRITE;
-INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11);
+INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,5),(2,4),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(4,12),(4,13),(4,14),(4,15),(4,16),(4,17),(4,18),(4,19),(4,20);
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `session`;

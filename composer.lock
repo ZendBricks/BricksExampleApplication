@@ -164,12 +164,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zend-bricks/bricks-user.git",
-                "reference": "9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7"
+                "reference": "b2fffec53c2345aaf41e6a7e81c56a1e4c4ee345"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zend-bricks/bricks-user/zipball/9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7",
-                "reference": "9e2869bba8b56c1b1651a9416bc9b2e2a6854fe7",
+                "url": "https://api.github.com/repos/zend-bricks/bricks-user/zipball/b2fffec53c2345aaf41e6a7e81c56a1e4c4ee345",
+                "reference": "b2fffec53c2345aaf41e6a7e81c56a1e4c4ee345",
                 "shasum": ""
             },
             "require": {
@@ -213,7 +213,7 @@
                 "user",
                 "zend"
             ],
-            "time": "2016-07-03 07:47:42"
+            "time": "2016-07-09 14:36:23"
         },
         {
             "name": "zendframework/zend-authentication",
@@ -2601,16 +2601,16 @@
         },
         {
             "name": "zendframework/zend-session",
-            "version": "2.7.2",
+            "version": "2.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-session.git",
-                "reference": "f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed"
+                "reference": "346e9709657b81a5d53d70ce754730a26d1f02f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-session/zipball/f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed",
-                "reference": "f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed",
+                "url": "https://api.github.com/repos/zendframework/zend-session/zipball/346e9709657b81a5d53d70ce754730a26d1f02f2",
+                "reference": "346e9709657b81a5d53d70ce754730a26d1f02f2",
                 "shasum": ""
             },
             "require": {
@@ -2663,7 +2663,7 @@
                 "session",
                 "zf2"
             ],
-            "time": "2016-06-24 15:52:13"
+            "time": "2016-07-05 18:32:50"
         },
         {
             "name": "zendframework/zend-stdlib",

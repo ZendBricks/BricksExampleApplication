@@ -108,6 +108,23 @@ class UserApi implements UserApiInterface
         $this->pdo->query("UPDATE user SET role_id = (SELECT id FROM role WHERE name = 'User') WHERE id = $userId");
     }
     
+    public function countUsers()
+    {
+        $result = $this->pdo->query("SELECT count(id) FROM user");
+        $result = $result->fetch();
+        if ($result) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+    
+    public function getUsers($offset, $count)
+    {
+        $result = $this->pdo->query("SELECT u.id,u.username,r.name as role,u.email FROM user u JOIN role r ON u.role_id = r.id");
+        return $result->fetchAll();
+    }
+    
     public function deleteUser($userId)
     {
         $this->pdo->query("DELETE FROM user WHERE id = '$userId'");
@@ -145,9 +162,46 @@ class UserApi implements UserApiInterface
         return $result;
     }
     
-    public function getRoles()
+    public function countRoles()
     {
-        $roles = $this->pdo->query("SELECT id,name,parent_role_id FROM role")->fetchAll();
+        $result = $this->pdo->query("SELECT COUNT(id) FROM role");
+        $result = $result->fetch();
+        if ($result) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+    
+    public function getRoles($offset, $itemCountPerPage)
+    {
+        $roles = $this->pdo->query("SELECT r.id,r.name,p.name as parent_role FROM role r LEFT JOIN role_parent_role rx ON r.id = rx.role_id LEFT JOIN role p ON rx.parent_role_id = p.id ORDER BY r.id ASC")->fetchAll();
+        $rolesById = [];
+        foreach ($roles as $role) {
+            if (!array_key_exists($role['id'], $rolesById)) {
+                $rolesById[$role['id']] = [];
+            }
+            $rolesById[$role['id']][] = $role;
+        }
+        $result = [];
+        foreach ($rolesById as $roleEntries) {
+            $parentRoles = [];
+            foreach ($roleEntries as $roleEntry) {
+                $parentRoles[] = $roleEntry['parent_role'];
+            }
+            $role = reset($roleEntries);
+            $result[] = [
+                'id' => $role['id'],
+                'name' => $role['name'],
+                'parent' => $parentRoles
+            ];
+        }
+        return $result;
+    }
+    
+    public function getRolesAndParent()
+    {
+        $roles = $this->pdo->query("SELECT id,name FROM role")->fetchAll();
         $rolesById = [];
         foreach ($roles as $role) {
             $rolesById[$role['id']] = $role['name'];
