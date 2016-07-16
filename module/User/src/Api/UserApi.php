@@ -162,6 +162,63 @@ class UserApi implements UserApiInterface
         return $result;
     }
     
+    public function saveRole($data, $id = null)
+    {
+        $name = $data['name'];
+        $parent = $data['parent'];
+        if ($id) {
+            $stmt = $this->pdo->prepare('UPDATE role SET name = :name WHERE id = :id');
+            $stmt->bindParam('id', $id);
+            $stmt->bindParam('name', $name);
+            if ($stmt->execute()) {
+                $stmt = $this->pdo->prepare('DELETE FROM role_parent_role WHERE role_id = :id');
+                $stmt->bindParam('id', $id);
+                if ($stmt->execute()) {
+                    $stmt = $this->pdo->prepare('INSERT INTO role_parent_role VALUES (:roleId, :parentRoleId)');
+                    $stmt->bindParam('roleId', $id);
+                    foreach ($parent as $parentRoleId) {
+                        $stmt->bindParam('parentRoleId', $parentRoleId);
+                        if (!$stmt->execute()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+        } else {
+            $stmt = $this->pdo->prepare('INSERT INTO role(name) VALUES(:name)');
+            $stmt->bindParam('name', $name);
+            if ($stmt->execute()) {
+                return $this->pdo->lastInsertId();
+            }
+        }
+    }
+    
+    public function getRoleData($id)
+    {
+        $stmt = $this->pdo->prepare('SELECT name FROM role WHERE id = :id');
+        $stmt->bindParam('id', $id);
+        if ($stmt->execute()) {
+            $role = $stmt->fetch();
+            $role['parent'] = [];
+            $stmt = $this->pdo->prepare('SELECT parent_role_id FROM role_parent_role WHERE role_id = :id');
+            $stmt->bindParam('id', $id);
+            if ($stmt->execute()) {
+                while ($parent = $stmt->fetch()) {
+                    $role['parent'][] = $parent['parent_role_id'];
+                }
+                return $role;
+            }
+        }
+    }
+    
+    public function deleteRole($id)
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM role WHERE id = :id');
+        $stmt->bindParam('id', $id);
+        return $stmt->execute();
+    }
+    
     public function countRoles()
     {
         $result = $this->pdo->query("SELECT COUNT(id) FROM role");
@@ -175,7 +232,7 @@ class UserApi implements UserApiInterface
     
     public function getRoles($offset, $itemCountPerPage)
     {
-        $roles = $this->pdo->query("SELECT r.id,r.name,p.name as parent_role FROM role r LEFT JOIN role_parent_role rx ON r.id = rx.role_id LEFT JOIN role p ON rx.parent_role_id = p.id ORDER BY r.id ASC")->fetchAll();
+        $roles = $this->pdo->query("SELECT r.id,r.name,p.name as parent_role FROM role r LEFT JOIN role_parent_role rx ON r.id = rx.role_id LEFT JOIN role p ON rx.parent_role_id = p.id ORDER BY r.id ASC LIMIT $offset,$itemCountPerPage")->fetchAll();
         $rolesById = [];
         foreach ($roles as $role) {
             if (!array_key_exists($role['id'], $rolesById)) {
@@ -199,13 +256,20 @@ class UserApi implements UserApiInterface
         return $result;
     }
     
-    public function getRolesAndParent()
+    public function getRoleNames()
     {
         $roles = $this->pdo->query("SELECT id,name FROM role")->fetchAll();
         $rolesById = [];
         foreach ($roles as $role) {
             $rolesById[$role['id']] = $role['name'];
         }
+        return $rolesById;
+    }
+
+    public function getRolesAndParent()
+    {
+        $rolesById = $this->getRoleNames();
+        $roles = $this->pdo->query("SELECT id,name FROM role")->fetchAll();
         $result = [];
         foreach ($roles as $role) {
             $parentRoles = [];

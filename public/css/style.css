@@ -3,6 +3,14 @@ body {
     padding-bottom: 40px;
 }
 
+label {
+    margin-right: 10px;
+}
+
+input[type="checkbox"] {
+    margin-right: 2px;
+}
+
 .jumbotron {
     padding: 10px;
     text-align: center;
