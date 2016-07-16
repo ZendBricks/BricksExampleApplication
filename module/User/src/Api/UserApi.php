@@ -18,17 +18,26 @@ class UserApi implements UserApiInterface
     
     public function setSessionIdentity($sessionId, $identity)
     {
-        if ($this->pdo->query("SELECT id FROM `session` WHERE identity = '$identity'")->fetch()) {
-            $this->pdo->query("UPDATE `session` SET id = '$sessionId' WHERE identity = '$identity'");
+        $stmt = $this->pdo->prepare('SELECT id FROM `session` WHERE identity = :identity');
+        $stmt->bindParam('identity', $identity);
+        $stmt->execute();
+        if ($stmt->fetch()) {
+            $stmt = $this->pdo->prepare('UPDATE `session` SET id = :sessionId WHERE identity = :identity');
         } else {
-            $this->pdo->query("INSERT INTO `session` VALUES ('$sessionId', '$identity')");
+            $stmt = $this->pdo->prepare('INSERT INTO `session` VALUES (:sessionId, :identity)');
         }
+        $stmt->bindParam('sessionId', $sessionId);
+        $stmt->bindParam('identity', $identity);
+        $stmt->execute();
     }
     
     public function getSessionIdentity($sessionId)
     {
-        $result = $this->pdo->query("SELECT identity FROM `session` WHERE id = '$sessionId'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT identity FROM `session` WHERE id = :sessionId');
+        $stmt->bindParam('sessionId', $sessionId);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['identity'];
         } else {
             return false;
@@ -37,55 +46,70 @@ class UserApi implements UserApiInterface
     
     public function clearSessionIdentity($sessionId)
     {
-        $this->pdo->query("DELETE FROM `session` WHERE id = '$sessionId'");
+        $stmt = $this->pdo->prepare('DELETE FROM `session` WHERE id = :sessionId');
+        $stmt->bindParam('sessionId', $sessionId);
+        $stmt->execute();
     }
 
-    public function getIdByUsername($username)
+    public function getUserIdByUsername($username)
     {
-        $stmt = $this->pdo->prepare("SELECT id FROM user WHERE username = :username");
+        $stmt = $this->pdo->prepare('SELECT id FROM user WHERE username = :username');
         $stmt->bindParam('username', $username);
         $stmt->execute();
-        if ($result = $stmt->fetch()) {
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['id'];
         } else {
             return false;
         }
     }
     
-    public function getIdByEmail($email)
+    public function getUsernameByUserId($userId)
     {
-        $result = $this->pdo->query("SELECT id FROM user WHERE email = '$email'");
-        if ($result = $result->fetch()) {
-            return $result['id'];
-        } else {
-            return false;
-        }
-    }
-    
-    public function getUsernameById($userId)
-    {
-        $result = $this->pdo->query("SELECT username FROM user WHERE id = '$userId'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT username FROM user WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['username'];
         } else {
             return false;
         }
     }
     
-    public function getEmailById($userId)
+    public function getUserIdByEmail($email)
     {
-        $result = $this->pdo->query("SELECT email FROM user WHERE id = '$userId'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT id FROM user WHERE email = :email');
+        $stmt->bindParam('email', $email);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
+            return $result['id'];
+        } else {
+            return false;
+        }
+    }
+    
+    public function getEmailByUserId($userId)
+    {
+        $stmt = $this->pdo->prepare('SELECT email FROM user WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['email'];
         } else {
             return false;
         }
     }
 
-    public function getPasswordById($userId)
+    public function getPasswordByUserId($userId)
     {
-        $result = $this->pdo->query("SELECT password FROM user WHERE id = '$userId'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT password FROM user WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['password'];
         } else {
             return false;
@@ -94,8 +118,10 @@ class UserApi implements UserApiInterface
     
     public function isUserActivated($userId)
     {
-        $result = $this->pdo->query("SELECT role_id FROM user WHERE id = '$userId'");
-        $result = $result->fetch();
+        $stmt = $this->pdo->prepare('SELECT role_id FROM user WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch();
         if ($result && $result['role_id'] != 1) {
             return true;
         } else {
@@ -105,13 +131,16 @@ class UserApi implements UserApiInterface
     
     public function activateUser($userId)
     {
-        $this->pdo->query("UPDATE user SET role_id = (SELECT id FROM role WHERE name = 'User') WHERE id = $userId");
+        $stmt = $this->pdo->prepare("UPDATE user SET role_id = (SELECT id FROM role WHERE name = 'User') WHERE id = :userId");
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
     }
     
     public function countUsers()
     {
-        $result = $this->pdo->query("SELECT count(id) FROM user");
-        $result = $result->fetch();
+        $stmt = $this->pdo->prepare('SELECT count(id) FROM user');
+        $stmt->execute();
+        $result = $stmt->fetch();
         if ($result) {
             return $result[0];
         } else {
@@ -121,13 +150,16 @@ class UserApi implements UserApiInterface
     
     public function getUsers($offset, $count)
     {
-        $result = $this->pdo->query("SELECT u.id,u.username,r.name as role,u.email FROM user u JOIN role r ON u.role_id = r.id");
-        return $result->fetchAll();
+        $stmt = $this->pdo->prepare('SELECT u.id,u.username,r.name as role,u.email FROM user u JOIN role r ON u.role_id = r.id');
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
     
     public function deleteUser($userId)
     {
-        $this->pdo->query("DELETE FROM user WHERE id = '$userId'");
+        $stmt = $this->pdo->prepare('DELETE FROM user WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
     }
 
     public function getRoleNameByIdentity($userId)
@@ -136,8 +168,11 @@ class UserApi implements UserApiInterface
         $userRoleCache = $this->container->get('UserRoleCache');
         $role = $userRoleCache->getItem($userId);
         if (!$role) {
-            $result = $this->pdo->query("SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = '$userId'");
-            if ($result = $result->fetch()) {
+            $stmt = $this->pdo->prepare('SELECT r.name FROM user u INNER JOIN role r ON r.id = u.role_id WHERE u.id = :userId');
+            $stmt->bindParam('userId', $userId);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            if ($result) {
                 $role = $result['name'];
                 $userRoleCache->setItem($userId, $role);
             } else {
@@ -149,14 +184,17 @@ class UserApi implements UserApiInterface
     
     public function addPermission($name)
     {
-        $this->pdo->query("INSERT INTO permission(name) VALUES('$name')");
+        $stmt = $this->pdo->prepare('INSERT INTO permission(name) VALUES(:name)');
+        $stmt->bindParam('name', $name);
+        $stmt->execute();
     }
 
     public function getPermissions()
     {
-        $query = $this->pdo->query("SELECT name FROM permission");
+        $stmt = $this->pdo->prepare('SELECT name FROM permission');
+        $stmt->execute();
         $result = [];
-        while ($permission = $query->fetch()) {
+        while ($permission = $stmt->fetch()) {
             $result[] = reset($permission);
         }
         return $result;
@@ -167,6 +205,9 @@ class UserApi implements UserApiInterface
         $name = $data['name'];
         $parent = $data['parent'];
         if ($id) {
+            $stmt = $this->pdo->prepare('INSERT INTO permission(name) VALUES(:name)');
+            $stmt->bindParam('name', $name);
+            $stmt->execute();
             $stmt = $this->pdo->prepare('UPDATE role SET name = :name WHERE id = :id');
             $stmt->bindParam('id', $id);
             $stmt->bindParam('name', $name);
@@ -221,8 +262,9 @@ class UserApi implements UserApiInterface
     
     public function countRoles()
     {
-        $result = $this->pdo->query("SELECT COUNT(id) FROM role");
-        $result = $result->fetch();
+        $stmt = $this->pdo->prepare('SELECT COUNT(id) FROM role');
+        $stmt->execute();
+        $result = $stmt->fetch();
         if ($result) {
             return $result[0];
         } else {
@@ -232,7 +274,11 @@ class UserApi implements UserApiInterface
     
     public function getRoles($offset, $itemCountPerPage)
     {
-        $roles = $this->pdo->query("SELECT r.id,r.name,p.name as parent_role FROM role r LEFT JOIN role_parent_role rx ON r.id = rx.role_id LEFT JOIN role p ON rx.parent_role_id = p.id ORDER BY r.id ASC LIMIT $offset,$itemCountPerPage")->fetchAll();
+        $stmt = $this->pdo->prepare('SELECT r.id,r.name,p.name as parent_role FROM role r LEFT JOIN role_parent_role rx ON r.id = rx.role_id LEFT JOIN role p ON rx.parent_role_id = p.id ORDER BY r.id ASC LIMIT :offset,:itemCountPerPage');
+        $stmt->bindParam('offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindParam('itemCountPerPage', $itemCountPerPage, \PDO::PARAM_INT);
+        $stmt->execute();
+        $roles = $stmt->fetchAll();
         $rolesById = [];
         foreach ($roles as $role) {
             if (!array_key_exists($role['id'], $rolesById)) {
@@ -258,7 +304,9 @@ class UserApi implements UserApiInterface
     
     public function getRoleNames()
     {
-        $roles = $this->pdo->query("SELECT id,name FROM role")->fetchAll();
+        $stmt = $this->pdo->prepare('SELECT id,name FROM role');
+        $stmt->execute();
+        $roles = $stmt->fetchAll();
         $rolesById = [];
         foreach ($roles as $role) {
             $rolesById[$role['id']] = $role['name'];
@@ -269,24 +317,27 @@ class UserApi implements UserApiInterface
     public function getRolesAndParent()
     {
         $rolesById = $this->getRoleNames();
-        $roles = $this->pdo->query("SELECT id,name FROM role")->fetchAll();
+        $stmt = $this->pdo->prepare('SELECT r.id,r.name,p.parent_role_id FROM role r LEFT JOIN role_parent_role p ON r.id = p.role_id ORDER BY r.id ASC');
+        $stmt->execute();
+        $roles = $stmt->fetchAll();
         $result = [];
         foreach ($roles as $role) {
-            $parentRoles = [];
-            $parentRoleId = $role['parent_role_id'];
-            if ($parentRoleId) {
-                $parentRoles[] = $rolesById[$role['parent_role_id']];
+            if (!array_key_exists($role['name'], $result)) {
+                $result[$role['name']] = [];
             }
-            $result[$role['name']] = $parentRoles;
+            if ($role['parent_role_id']) {
+                $result[$role['name']][] = $rolesById[$role['parent_role_id']];
+            }
         }
         return $result;
     }
 
     public function getRolePermissions()
     {
-        $query = $this->pdo->query("SELECT r.name as role_name,p.name as permission_name FROM role_permission rp INNER JOIN role r ON rp.role_id = r.id INNER JOIN permission p ON rp.permission_id = p.id");
+        $stmt = $this->pdo->prepare('SELECT r.name as role_name,p.name as permission_name FROM role_permission rp INNER JOIN role r ON rp.role_id = r.id INNER JOIN permission p ON rp.permission_id = p.id');
+        $stmt->execute();
         $result = [];
-        while ($rolePermission = $query->fetch()) {
+        while ($rolePermission = $stmt->fetch()) {
             if (!array_key_exists($rolePermission['role_name'], $result)) {
                 $result[$rolePermission['role_name']] = [];
             }
@@ -307,20 +358,32 @@ class UserApi implements UserApiInterface
 
     public function registerUser($username, $mail, $password)
     {
-        $this->pdo->query("INSERT INTO user (username, email, password, role_id) VALUES('$username', '$mail', '$password', 1)");
+        $stmt = $this->pdo->prepare('INSERT INTO user (username, email, password, role_id) VALUES(:username, :mail, :password, 1)');
+        $stmt->bindParam('username', $username);
+        $stmt->bindParam('mail', $mail);
+        $stmt->bindParam('password', $password);
+        $stmt->execute();
         return $this->pdo->lastInsertId();
     }
     
     public function createRegisterToken($userId, $token)
     {
-        $this->pdo->query("DELETE FROM register_token WHERE user_id = '$userId'");
-        $this->pdo->query("INSERT INTO register_token (user_id, token) VALUES('$userId', '$token')");
+        $stmt = $this->pdo->prepare('DELETE FROM register_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $stmt = $this->pdo->prepare('INSERT INTO register_token (user_id, token) VALUES(:userId, :token)');
+        $stmt->bindParam('userId', $userId);
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
     }
 
     public function getUserIdByRegisterToken($token)
     {
-        $result = $this->pdo->query("SELECT user_id FROM register_token WHERE token = '$token'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT user_id FROM register_token WHERE token = :token');
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['user_id'];
         } else {
             return false;
@@ -329,19 +392,29 @@ class UserApi implements UserApiInterface
     
     public function deleteRegisterToken($userId)
     {
-        $this->pdo->query("DELETE FROM register_token WHERE user_id = '$userId'");
+        $stmt = $this->pdo->prepare('DELETE FROM register_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
     }
     
     public function createPasswordToken($userId, $token)
     {
-        $this->pdo->query("DELETE FROM password_token WHERE user_id = '$userId'");
-        $this->pdo->query("INSERT INTO password_token (user_id, token) VALUES('$userId', '$token')");
+        $stmt = $this->pdo->prepare('DELETE FROM password_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $stmt = $this->pdo->prepare('INSERT INTO password_token (user_id, token) VALUES(:userId, :token)');
+        $stmt->bindParam('userId', $userId);
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
     }
 
     public function getUserIdByPasswordToken($token)
     {
-        $result = $this->pdo->query("SELECT user_id FROM password_token WHERE token = '$token'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT user_id FROM password_token WHERE token = :token');
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
             return $result['user_id'];
         } else {
             return false;
@@ -350,24 +423,37 @@ class UserApi implements UserApiInterface
     
     public function deletePasswordToken($userId)
     {
-        $this->pdo->query("DELETE FROM password_token WHERE user_id = '$userId'");
+        $stmt = $this->pdo->prepare('DELETE FROM password_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
     }
     
     public function setPassword($userId, $password)
     {
-        $this->pdo->query("UPDATE user SET password = '$password' WHERE id = '$userId'");
+        $stmt = $this->pdo->prepare('UPDATE user SET password = :password WHERE id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->bindParam('password', $password);
+        $stmt->execute();
     }
     
     public function createDeleteToken($userId, $token)
     {
-        $this->pdo->query("DELETE FROM delete_token WHERE user_id = '$userId'");
-        $this->pdo->query("INSERT INTO delete_token (user_id, token) VALUES('$userId', '$token')");
+        $stmt = $this->pdo->prepare('DELETE FROM delete_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $stmt = $this->pdo->prepare('INSERT INTO delete_token (user_id, token) VALUES(:userId, :token)');
+        $stmt->bindParam('userId', $userId);
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
     }
     
     public function getUserIdByDeleteToken($token)
     {
-        $result = $this->pdo->query("SELECT user_id FROM delete_token WHERE token = '$token'");
-        if ($result = $result->fetch()) {
+        $stmt = $this->pdo->prepare('SELECT user_id FROM delete_token WHERE token = :token');
+        $stmt->bindParam('token', $token);
+        $stmt->execute();
+        $result = $result->fetch();
+        if ($result) {
             return $result['user_id'];
         } else {
             return false;
@@ -376,7 +462,9 @@ class UserApi implements UserApiInterface
     
     public function deleteDeleteToken($userId)
     {
-        $this->pdo->query("DELETE FROM delete_token WHERE user_id = '$userId'");
+        $stmt = $this->pdo->prepare('DELETE FROM delete_token WHERE user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
     }
     
     public function onRoleChanged($userId)
