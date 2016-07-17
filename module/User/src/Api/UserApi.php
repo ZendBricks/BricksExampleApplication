@@ -150,9 +150,38 @@ class UserApi implements UserApiInterface
     
     public function getUsers($offset, $count)
     {
-        $stmt = $this->pdo->prepare('SELECT u.id,u.username,r.name as role,u.email FROM user u JOIN role r ON u.role_id = r.id');
+        $stmt = $this->pdo->prepare('SELECT u.id,u.username,u.email,r.name as role FROM user u JOIN role r ON u.role_id = r.id');
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+    
+    public function saveUser($data, $id = null)
+    {
+        $username = $data['username'];
+        $email = $data['email'];
+        $role = $data['role'];
+        if ($id) {
+            $stmt = $this->pdo->prepare('UPDATE user SET username = :username, email = :email, role_id = :roleId WHERE id = :id');
+            $stmt->bindParam('username', $username);
+            $stmt->bindParam('email', $email);
+            $stmt->bindParam('roleId', $role);
+            $stmt->bindParam('id', $id);
+            return $stmt->execute();
+        }
+    }
+    
+    public function getUserData($id)
+    {
+        $stmt = $this->pdo->prepare('SELECT username,email,role_id FROM user WHERE id = :id');
+        $stmt->bindParam('id', $id);
+        if ($stmt->execute()) {
+            $user = $stmt->fetch();
+            return [
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'role' => $user['role_id']
+            ];
+        }
     }
     
     public function deleteUser($userId)
@@ -205,9 +234,6 @@ class UserApi implements UserApiInterface
         $name = $data['name'];
         $parent = $data['parent'];
         if ($id) {
-            $stmt = $this->pdo->prepare('INSERT INTO permission(name) VALUES(:name)');
-            $stmt->bindParam('name', $name);
-            $stmt->execute();
             $stmt = $this->pdo->prepare('UPDATE role SET name = :name WHERE id = :id');
             $stmt->bindParam('id', $id);
             $stmt->bindParam('name', $name);
@@ -467,7 +493,7 @@ class UserApi implements UserApiInterface
         $stmt->execute();
     }
     
-    public function onRoleChanged($userId)
+    public function onUserRoleChanged($userId)
     {
         /* @var $userRoleCache \Zend\Cache\Storage\Adapter\AbstractAdapter */
         $userRoleCache = $this->container->get('UserRoleCache');
