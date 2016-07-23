@@ -220,11 +220,11 @@ class UserApi implements UserApiInterface
 
     public function getPermissions()
     {
-        $stmt = $this->pdo->prepare('SELECT name FROM permission');
+        $stmt = $this->pdo->prepare('SELECT id,name FROM permission');
         $stmt->execute();
         $result = [];
         while ($permission = $stmt->fetch()) {
-            $result[] = reset($permission);
+            $result[$permission['id']] = $permission['name'];
         }
         return $result;
     }
@@ -261,6 +261,19 @@ class UserApi implements UserApiInterface
         }
     }
     
+    public function getRoleName($roleId)
+    {
+        $stmt = $this->pdo->prepare('SELECT name FROM role WHERE id = :id');
+        $stmt->bindParam('id', $roleId);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
+            return $result['name'];
+        } else {
+            return false;
+        }
+    }
+
     public function getRoleData($id)
     {
         $stmt = $this->pdo->prepare('SELECT name FROM role WHERE id = :id');
@@ -356,6 +369,35 @@ class UserApi implements UserApiInterface
             }
         }
         return $result;
+    }
+
+    public function getPermissionsOfRole($roleId)
+    {
+        $stmt = $this->pdo->prepare('SELECT permission_id FROM role_permission WHERE role_id = :roleId');
+        $stmt->bindParam('roleId', $roleId);
+        $stmt->execute();
+        $result = [];
+        while ($rolePermission = $stmt->fetch()) {
+            $result[] = $rolePermission['permission_id'];
+        }
+        return $result;
+    }
+
+    public function setRolePermissions($roleId, $permissions)
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM role_permission WHERE role_id = :roleId');
+        $stmt->bindParam('roleId', $roleId);
+        if ($stmt->execute()) {
+            $stmt = $this->pdo->prepare('INSERT INTO role_permission VALUES (:roleId, :permissionId)');
+            $stmt->bindParam('roleId', $roleId);
+            foreach ($permissions as $permission) {
+                $stmt->bindParam('permissionId', $permission);
+                if (!$stmt->execute()) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     public function getRolePermissions()
