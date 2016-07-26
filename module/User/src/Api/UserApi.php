@@ -148,9 +148,11 @@ class UserApi implements UserApiInterface
         }
     }
     
-    public function getUsers($offset, $count)
+    public function getUsers($offset, $itemCountPerPage)
     {
-        $stmt = $this->pdo->prepare('SELECT u.id,u.username,u.email,r.name as role FROM user u JOIN role r ON u.role_id = r.id');
+        $stmt = $this->pdo->prepare('SELECT u.id,u.username,u.email,r.name as role FROM user u JOIN role r ON u.role_id = r.id LIMIT :offset,:itemCountPerPage');
+        $stmt->bindParam('offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindParam('itemCountPerPage', $itemCountPerPage, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -520,7 +522,7 @@ class UserApi implements UserApiInterface
         $stmt = $this->pdo->prepare('SELECT user_id FROM delete_token WHERE token = :token');
         $stmt->bindParam('token', $token);
         $stmt->execute();
-        $result = $result->fetch();
+        $result = $stmt->fetch();
         if ($result) {
             return $result['user_id'];
         } else {
@@ -533,6 +535,70 @@ class UserApi implements UserApiInterface
         $stmt = $this->pdo->prepare('DELETE FROM delete_token WHERE user_id = :userId');
         $stmt->bindParam('userId', $userId);
         $stmt->execute();
+    }
+    
+    public function getProfileOptions($offset, $itemCountPerPage)
+    {
+        $stmt = $this->pdo->prepare('SELECT id,name,input_type as inputType FROM profile_option LIMIT :offset,:itemCountPerPage');
+        $stmt->bindParam('offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindParam('itemCountPerPage', $itemCountPerPage, \PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+    
+    public function saveProfileOption($data, $id = null)
+    {
+        $name = $data['name'];
+        $inputType = $data['inputType'];
+        if ($id) {
+            $stmt = $this->pdo->prepare('UPDATE profile_option SET name = :name, input_type = :inputType WHERE id = :id');
+            $stmt->bindParam('id', $id);
+            $stmt->bindParam('name', $name);
+            $stmt->bindParam('inputType', $inputType);
+            if ($stmt->execute()) {
+                return true;
+            }
+        } else {
+            $stmt = $this->pdo->prepare('INSERT INTO profile_option(name,input_type) VALUES(:name,:inputType)');
+            $stmt->bindParam('name', $name);
+            $stmt->bindParam('inputType', $inputType);
+            if ($stmt->execute()) {
+                return $this->pdo->lastInsertId();
+            }
+        }
+    }
+    
+    public function getProfileOptionData($id)
+    {
+        $stmt = $this->pdo->prepare('SELECT id,name,input_type as inputType FROM profile_option WHERE id = :id');
+        $stmt->bindParam('id', $id);
+        if ($stmt->execute()) {
+            return $stmt->fetch();
+        }
+    }
+    
+    public function deleteProfileOption($id)
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM profile_option WHERE id = :id');
+        $stmt->bindParam('id', $id);
+        return $stmt->execute();
+    }
+    
+    public function countProfileOptions()
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(id) FROM profile_option');
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result) {
+            return $result[0];
+        } else {
+            return false;
+        }
     }
     
     public function onUserRoleChanged($userId)
