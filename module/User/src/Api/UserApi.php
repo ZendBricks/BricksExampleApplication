@@ -601,6 +601,56 @@ class UserApi implements UserApiInterface
         }
     }
     
+    public function getProfileSettings($userId)
+    {
+        $stmt = $this->pdo->prepare('SELECT o.name,s.value FROM profile_option o LEFT JOIN profile_setting s ON o.id = s.profile_option_id AND s.user_id = :userId');
+        $stmt->bindParam('userId', $userId);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+    
+    public function setProfileSettings($userId, array $data)
+    {
+        $profileOptions = $this->getProfileOptions(0, 100);
+        $profileOptionsIdByName = [];
+        foreach ($profileOptions as $option) {
+            $profileOptionsIdByName[$option['name']] = $option['id'];
+        }
+
+        $success = true;
+        foreach ($data as $option => $value) {
+            $stmt = $this->pdo->prepare('SELECT value FROM profile_setting WHERE user_id = :userId AND profile_option_id = :option');
+            $stmt->bindParam('userId', $userId);
+            $stmt->bindParam('option', $profileOptionsIdByName[$option]);
+            $stmt->execute();
+            $dbValue = $stmt->fetch();
+
+            if (!$dbValue) {
+                $stmt = $this->pdo->prepare('INSERT INTO profile_setting (user_id, profile_option_id, value) VALUES(:userId, :option, :value)');
+                $stmt->bindParam('userId', $userId);
+                $stmt->bindParam('option', $profileOptionsIdByName[$option]);
+                $stmt->bindParam('value', $value);
+                $success = $stmt->execute();
+            } elseif ($dbValue['value'] != $value) {
+                $stmt = $this->pdo->prepare('UPDATE profile_setting SET value = :value WHERE user_id = :userId AND profile_option_id = :option');
+                $stmt->bindParam('userId', $userId);
+                $stmt->bindParam('option', $profileOptionsIdByName[$option]);
+                $stmt->bindParam('value', $value);
+                $success = $stmt->execute();
+            }
+
+            if (!$success) {
+                break;
+            }
+        }
+        return $success;
+    }
+    
     public function onUserRoleChanged($userId)
     {
         /* @var $userRoleCache \Zend\Cache\Storage\Adapter\AbstractAdapter */
