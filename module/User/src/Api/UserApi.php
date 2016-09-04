@@ -157,25 +157,25 @@ class UserApi implements UserApiInterface
         return $stmt->fetchAll();
     }
     
-    public function saveUser($data, $id = null)
+    public function saveUser($data, $userId = null)
     {
         $username = $data['username'];
         $email = $data['email'];
         $role = $data['role'];
-        if ($id) {
+        if ($userId) {
             $stmt = $this->pdo->prepare('UPDATE user SET username = :username, email = :email, role_id = :roleId WHERE id = :id');
             $stmt->bindParam('username', $username);
             $stmt->bindParam('email', $email);
             $stmt->bindParam('roleId', $role);
-            $stmt->bindParam('id', $id);
+            $stmt->bindParam('id', $userId);
             return $stmt->execute();
         }
     }
     
-    public function getUserData($id)
+    public function getUserData($userId)
     {
         $stmt = $this->pdo->prepare('SELECT username,email,role_id FROM user WHERE id = :id');
-        $stmt->bindParam('id', $id);
+        $stmt->bindParam('id', $userId);
         if ($stmt->execute()) {
             $user = $stmt->fetch();
             return [
@@ -426,11 +426,11 @@ class UserApi implements UserApiInterface
         ];
     }
 
-    public function registerUser($username, $mail, $password)
+    public function registerUser($username, $email, $password)
     {
         $stmt = $this->pdo->prepare('INSERT INTO user (username, email, password, role_id) VALUES(:username, :mail, :password, 1)');
         $stmt->bindParam('username', $username);
-        $stmt->bindParam('mail', $mail);
+        $stmt->bindParam('mail', $email);
         $stmt->bindParam('password', $password);
         $stmt->execute();
         return $this->pdo->lastInsertId();

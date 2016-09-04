@@ -15,12 +15,12 @@ class ConsoleController extends AbstractConsoleController
 
     public function clearCacheAction()
     {
-        $config = $this->container->get('Config');
+        $config = $this->container->get('config');
         if (array_key_exists('caches', $config)) {
             $caches = array_keys($config['caches']);
             foreach ($caches as $cache) {
                 $this->container->get($cache)->flush();
-                echo "flushed cache: $cache\n";
+                echo 'flushed cache: ' . $cache . PHP_EOL;
             }
         }
     }

@@ -25,6 +25,7 @@
         "zendframework/zend-i18n": "*",
         "zendframework/zend-captcha": "*",
         "zendframework/zend-mail": "*",
+        "zfcampus/zf-console": "*",
         "zend-bricks/bricks-common": "*",
         "zend-bricks/bricks-user": "*",
         "zendframework/zend-developer-tools": "*"
